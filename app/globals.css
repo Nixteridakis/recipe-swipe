@@ -1,0 +1,59 @@
+@import "../styles/themes/index.css";
+@import "../styles/resets.css";
+@import "../styles/typography.css";
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 201, 111, 0.22), transparent 30%),
+    radial-gradient(circle at top right, rgba(185, 238, 171, 0.22), transparent 26%),
+    linear-gradient(180deg, var(--color-bg), var(--color-bg-elevated));
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  border-radius: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 0.7rem;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 244, 243, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(255, 244, 243, 0.8);
+  border-radius: 999px;
+  background: rgba(163, 103, 98, 0.45);
+}

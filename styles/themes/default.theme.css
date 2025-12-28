@@ -1,0 +1,90 @@
+/**
+ * Default theme.
+ * Switch themes by setting data-theme on <html>, e.g. <html data-theme="default">.
+ */
+
+:root,
+[data-theme="default"] {
+  /* Editorial palette */
+  --color-bg: #fff4f3;
+  --color-bg-elevated: #ffedeb;
+  --color-surface: #ffffff;
+  --color-surface-low: #ffedeb;
+  --color-surface-container: #ffe2de;
+  --color-surface-high: #ffdad6;
+  --color-surface-highest: #ffd3ce;
+  --color-border: #e09c96;
+  --color-border-strong: #a36762;
+  --color-border-soft: rgba(163, 103, 98, 0.18);
+  --color-text: #4e211e;
+  --color-text-muted: #834c48;
+  --color-text-subtle: #a36762;
+  --color-primary: #a63400;
+  --color-primary-strong: #912d00;
+  --color-primary-soft: #ff7948;
+  --color-secondary: #7b5400;
+  --color-secondary-soft: #ffc96f;
+  --color-tertiary: #386631;
+  --color-tertiary-soft: #b9eeab;
+  --color-error: #b31b25;
+  --color-on-primary: #ffefeb;
+  --color-on-secondary: #614100;
+  --color-on-tertiary: #1a4716;
+  --color-overlay: rgba(78, 33, 30, 0.88);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Typography */
+  --font-display: var(--font-plus-jakarta-sans), system-ui, sans-serif;
+  --font-body: var(--font-be-vietnam-pro), system-ui, sans-serif;
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 4rem;
+  --tracking-tight: -0.045em;
+  --tracking-display: -0.06em;
+  --tracking-label: 0.18em;
+
+  /* Layout */
+  --layout-max: 80rem;
+  --layout-header-height: 5.25rem;
+  --layout-rail-width: 16rem;
+  --layout-mobile-nav-height: 5rem;
+
+  /* Radius */
+  --radius-sm: 0.875rem;
+  --radius: 1.25rem;
+  --radius-lg: 1.75rem;
+  --radius-xl: 2rem;
+  --radius-2xl: 3rem;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-soft: 0 24px 60px -24px rgba(166, 52, 0, 0.22);
+  --shadow-card: 0 32px 80px -36px rgba(78, 33, 30, 0.18);
+  --shadow-glass: 0 18px 44px -24px rgba(78, 33, 30, 0.25);
+
+  /* Motion */
+  --transition-fast: 160ms ease;
+  --transition-medium: 280ms ease;
+}

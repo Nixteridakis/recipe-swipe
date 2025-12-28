@@ -1,0 +1,40 @@
+{
+  "name": "recipe-book",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "varlock run -- next dev --webpack",
+    "build": "varlock run -- next build",
+    "start": "varlock run -- next start",
+    "lint": "eslint",
+    "env:check": "varlock load"
+  },
+  "overrides": {
+    "next": {
+      "@next/env": "npm:@varlock/nextjs-integration"
+    }
+  },
+  "dependencies": {
+    "@portabletext/react": "^6.0.3",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.22.0",
+    "@varlock/nextjs-integration": "^0.3.0",
+    "next": "16.1.1",
+    "next-sanity": "^11.6.12",
+    "postcss": "^8.5.8",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sanity": "^4.22.0",
+    "styled-components": "^6.1.19",
+    "varlock": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "sass": "^1.98.0",
+    "typescript": "^5"
+  }
+}

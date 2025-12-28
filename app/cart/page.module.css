@@ -1,0 +1,522 @@
+.main {
+  display: grid;
+  gap: clamp(2.8rem, 5vw, 4.8rem);
+}
+
+.hero {
+  display: grid;
+  gap: clamp(1.8rem, 3vw, 3.4rem);
+  padding: clamp(1.2rem, 2vw, 2rem) 0;
+}
+
+.heroContent {
+  max-width: 32rem;
+}
+
+.heroVisual {
+  width: min(14.5rem, 100%);
+  aspect-ratio: 0.98;
+  justify-self: end;
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(20, 15, 13, 0.08), rgba(20, 15, 13, 0.18)),
+    url("https://lh3.googleusercontent.com/aida-public/AB6AXuDsOU7ly650ts-qo225wRFfud5W6OTFMqCW3g6oi5OUdRvsryhFO6vOFYhouGSvcsnzy2V5AesxOcBcBQQZZahPkQZU7hWkrho42b2LBoyY3DGY5JFpy9ilKF7NJtHt90WjefyjZvrBWhFjDCRR1vPeJWEIheY0GUhw43bZO5tSKUmPQzwG9itnh2F-3Dh-e1Oq2ed43vKzXZphDgWIA8cPO_xqEFeyzZnq5jHxDWLNje1EMVirFDTdOFcQ_tehfqDkTTVzHVSZZ5o")
+      center / cover no-repeat;
+  box-shadow: 0 14px 32px rgba(31, 20, 16, 0.12);
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0 0.65rem;
+  border-radius: var(--radius-pill);
+  background: rgba(240, 100, 47, 0.09);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-size: clamp(2.3rem, 4.4vw, 4.2rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: rgba(31, 25, 24, 0.96);
+}
+
+.subTitle {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(88, 76, 73, 0.9);
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.subTitle::before {
+  content: "✕";
+  color: rgba(240, 100, 47, 0.5);
+  font-size: 0.9rem;
+}
+
+.recipeTags {
+  margin-top: 1.15rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.recipeTag,
+.recipeTagMuted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0 0.72rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.56rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.recipeTag {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(217, 196, 189, 0.25);
+  color: rgba(80, 65, 61, 0.88);
+}
+
+.recipeTagMuted {
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(121, 104, 99, 0.78);
+}
+
+.addRecipeButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0 0.72rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.layoutGrid {
+  display: grid;
+  gap: clamp(1.4rem, 2.6vw, 2.2rem);
+}
+
+.itemsColumn {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.itemsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(216, 194, 187, 0.34);
+  padding-bottom: 0.7rem;
+}
+
+.sectionHeading {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.65rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-body);
+  font-size: clamp(2rem, 3.8vw, 3.05rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.sectionMeta {
+  margin-top: 0;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: rgba(105, 90, 86, 0.55);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+}
+
+.clearCheckedButton,
+.clearAllButton,
+.backLink,
+.checkoutButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(216, 194, 187, 0.34);
+  background: rgba(255, 255, 255, 0.88);
+  color: rgba(56, 40, 36, 0.9);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+}
+
+.clearCheckedButton {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  border: 0;
+  background: transparent;
+  min-height: auto;
+  padding: 0;
+  color: rgba(240, 100, 47, 0.82);
+}
+
+.empty {
+  padding: var(--space-6);
+  border: 1px solid rgba(216, 194, 187, 0.34);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.75);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.72rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.15rem;
+  min-height: 3.45rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(216, 194, 187, 0.13);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.itemChecked {
+  opacity: 0.5;
+}
+
+.itemChecked .itemTitle,
+.itemChecked .itemSubtitle {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.checkButton {
+  width: 1.42rem;
+  height: 1.42rem;
+  border-radius: 999px;
+  border: 1.8px solid rgba(240, 100, 47, 0.26);
+  background: rgba(255, 255, 255, 0.96);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+
+.checkButton[aria-pressed="true"] {
+  border-color: rgba(240, 100, 47, 0.86);
+  background: rgba(240, 100, 47, 0.72);
+}
+
+.checkButton[aria-pressed="true"]::after {
+  content: "";
+  width: 0.44rem;
+  height: 0.44rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.itemBody {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.itemTitle {
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.14;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(34, 27, 24, 0.94);
+}
+
+.itemSubtitle {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  color: rgba(93, 78, 74, 0.84);
+  letter-spacing: -0.005em;
+}
+
+.qtyControl {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.84rem;
+  min-width: 5.95rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  background: rgba(247, 236, 230, 0.95);
+  overflow: hidden;
+}
+
+.qtyButton {
+  width: 1.78rem;
+  height: 1.84rem;
+  border: 0;
+  background: transparent;
+  color: rgba(91, 70, 65, 0.82);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.qtyValue {
+  min-width: 2.15rem;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: rgba(49, 19, 16, 0.9);
+}
+
+.removeButton {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(112, 96, 91, 0.34);
+}
+
+.removeIcon {
+  width: 0.84rem;
+  height: 0.84rem;
+  stroke-width: 2.1;
+}
+
+.sideColumn {
+  display: grid;
+  gap: 1.45rem;
+  align-content: start;
+}
+
+.summaryCard {
+  padding: 1.35rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(216, 194, 187, 0.26);
+  background: rgba(245, 232, 226, 0.62);
+}
+
+.summaryTitle {
+  font-size: 1.34rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.summaryRow {
+  margin-top: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(86, 71, 66, 0.84);
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-weight: 700;
+}
+
+.summaryRow strong {
+  color: var(--color-primary);
+  font-size: 1.56rem;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.checkoutButton {
+  width: 100%;
+  margin-top: 1.4rem;
+  min-height: 2.15rem;
+  border: 0;
+  color: var(--color-on-primary);
+  background: linear-gradient(135deg, var(--color-primary), #f36e35);
+  box-shadow: 0 8px 18px rgba(240, 100, 47, 0.33);
+  font-family: var(--font-body);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.62rem;
+}
+
+.sideActions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.clearAllButton {
+  border-color: rgba(216, 194, 187, 0.34);
+  font-size: 0.78rem;
+}
+
+.essentialsCard {
+  padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(216, 194, 187, 0.14);
+  background: transparent;
+}
+
+.essentialsTitle {
+  font-size: 0.62rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(240, 100, 47, 0.6);
+}
+
+.essentialList {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 0.9rem;
+}
+
+.essentialItem {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+.essentialIconWrap {
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(216, 194, 187, 0.22);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(240, 100, 47, 0.55);
+}
+
+.essentialIcon {
+  width: 0.68rem;
+  height: 0.68rem;
+}
+
+.essentialText {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.essentialText strong {
+  font-size: 0.87rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.essentialText small {
+  color: rgba(97, 80, 75, 0.78);
+  font-size: 0.56rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.essentialAddIcon {
+  width: 0.83rem;
+  height: 0.83rem;
+  color: rgba(240, 100, 47, 0.48);
+}
+
+@media (min-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.45fr) minmax(12rem, 0.85fr);
+    align-items: center;
+  }
+
+  .layoutGrid {
+    grid-template-columns: minmax(0, 1.9fr) minmax(16rem, 0.9fr);
+    align-items: start;
+  }
+
+  .sideColumn {
+    position: sticky;
+    top: calc(var(--layout-header-height) + var(--space-4));
+  }
+}
+
+@media (max-width: 760px) {
+  .heroVisual {
+    justify-self: start;
+  }
+
+  .sectionHeading {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .sectionMeta {
+    font-size: 0.66rem;
+  }
+
+  .item {
+    grid-template-columns: auto 1fr auto;
+    padding: 0.75rem;
+    min-height: auto;
+  }
+
+  .qtyControl {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-left: calc(1.42rem + 1rem);
+  }
+
+  .removeButton {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .sideActions {
+    flex-direction: column;
+  }
+}

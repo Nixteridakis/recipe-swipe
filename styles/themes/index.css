@@ -1,0 +1,5 @@
+/**
+ * Theme entry: import every theme file.
+ * Add new themes here, e.g. @import "minimal.theme.css";
+ */
+@import "default.theme.css";

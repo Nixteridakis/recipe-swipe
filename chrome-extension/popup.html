@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 12px;
+        font-family: system-ui, sans-serif;
+        font-size: 13px;
+      }
+      h1 { margin: 0 0 10px; font-size: 14px; font-weight: 600; }
+      p { margin: 0 0 10px; color: #666; }
+      button {
+        width: 100%;
+        padding: 8px 12px;
+        margin-bottom: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      button.primary { background: #111; color: #fff; border-color: #111; }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .error { color: #c00; font-size: 12px; margin-top: 6px; }
+      .success { color: #060; font-size: 12px; margin-top: 6px; }
+      .meta { margin-top: 8px; font-size: 11px; color: #888; }
+      input { width: 100%; padding: 6px 8px; margin-top: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px; }
+      label { display: block; margin-top: 10px; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Recipe Book Importer</h1>
+    <p>Extract the recipe from this page and send it to your app.</p>
+    <label>Recipe Book API (e.g. http://localhost:3000)</label>
+    <input type="text" id="apiBase" placeholder="http://localhost:3000" />
+    <div style="margin-top: 10px;">
+      <button type="button" id="extract" class="primary">Extract recipe</button>
+      <button type="button" id="copy" disabled>Copy JSON</button>
+      <button type="button" id="send" disabled>Send to Recipe Book</button>
+      <button type="button" id="debug">Debug JSON-LD</button>
+    </div>
+    <div id="message"></div>
+    <div class="meta" id="meta"></div>
+    <script src="popup.js"></script>
+  </body>
+</html>

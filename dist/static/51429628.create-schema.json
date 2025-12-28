@@ -1,0 +1,516 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Produce",
+              "value": "produce"
+            },
+            {
+              "title": "Dairy",
+              "value": "dairy"
+            },
+            {
+              "title": "Meat & Seafood",
+              "value": "meat-seafood"
+            },
+            {
+              "title": "Pantry",
+              "value": "pantry"
+            },
+            {
+              "title": "Frozen",
+              "value": "frozen"
+            },
+            {
+              "title": "Bakery",
+              "value": "bakery"
+            },
+            {
+              "title": "Spices & Seasonings",
+              "value": "spices"
+            },
+            {
+              "title": "Oils & Vinegars",
+              "value": "oils-vinegars"
+            },
+            {
+              "title": "Beverages",
+              "value": "beverages"
+            },
+            {
+              "title": "Other",
+              "value": "other"
+            }
+          ],
+          "layout": "dropdown"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "produce",
+                  "dairy",
+                  "meat-seafood",
+                  "pantry",
+                  "frozen",
+                  "bakery",
+                  "spices",
+                  "oils-vinegars",
+                  "beverages",
+                  "other"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "piece(s)",
+              "value": "piece"
+            },
+            {
+              "title": "cup(s)",
+              "value": "cup"
+            },
+            {
+              "title": "tablespoon(s)",
+              "value": "tbsp"
+            },
+            {
+              "title": "teaspoon(s)",
+              "value": "tsp"
+            },
+            {
+              "title": "gram(s)",
+              "value": "g"
+            },
+            {
+              "title": "kilogram(s)",
+              "value": "kg"
+            },
+            {
+              "title": "ounce(s)",
+              "value": "oz"
+            },
+            {
+              "title": "pound(s)",
+              "value": "lb"
+            },
+            {
+              "title": "milliliter(s)",
+              "value": "ml"
+            },
+            {
+              "title": "liter(s)",
+              "value": "l"
+            },
+            {
+              "title": "pinch",
+              "value": "pinch"
+            },
+            {
+              "title": "clove(s)",
+              "value": "clove"
+            },
+            {
+              "title": "bunch",
+              "value": "bunch"
+            },
+            {
+              "title": "can(s)",
+              "value": "can"
+            },
+            {
+              "title": "package",
+              "value": "package"
+            }
+          ]
+        },
+        "description": "The most common unit for this ingredient",
+        "name": "defaultUnit",
+        "type": "string"
+      }
+    ],
+    "name": "ingredient",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      }
+    ],
+    "name": "category",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Original URL the recipe was imported from.",
+        "name": "sourceUrl",
+        "type": "url",
+        "title": "Source URL"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "servings",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "prepTime",
+        "type": "number",
+        "title": "Prep Time (minutes)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "cookTime",
+        "type": "number",
+        "title": "Cook Time (minutes)"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "to": [
+                  {
+                    "type": "ingredient"
+                  }
+                ],
+                "name": "ingredient",
+                "type": "reference"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      },
+                      {
+                        "flag": "min",
+                        "constraint": 0
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "quantity",
+                "type": "number"
+              },
+              {
+                "options": {
+                  "list": [
+                    {
+                      "title": "piece(s)",
+                      "value": "piece"
+                    },
+                    {
+                      "title": "cup(s)",
+                      "value": "cup"
+                    },
+                    {
+                      "title": "tablespoon(s)",
+                      "value": "tbsp"
+                    },
+                    {
+                      "title": "teaspoon(s)",
+                      "value": "tsp"
+                    },
+                    {
+                      "title": "gram(s)",
+                      "value": "g"
+                    },
+                    {
+                      "title": "kilogram(s)",
+                      "value": "kg"
+                    },
+                    {
+                      "title": "ounce(s)",
+                      "value": "oz"
+                    },
+                    {
+                      "title": "pound(s)",
+                      "value": "lb"
+                    },
+                    {
+                      "title": "milliliter(s)",
+                      "value": "ml"
+                    },
+                    {
+                      "title": "liter(s)",
+                      "value": "l"
+                    },
+                    {
+                      "title": "pinch",
+                      "value": "pinch"
+                    },
+                    {
+                      "title": "clove(s)",
+                      "value": "clove"
+                    },
+                    {
+                      "title": "bunch",
+                      "value": "bunch"
+                    },
+                    {
+                      "title": "can(s)",
+                      "value": "can"
+                    },
+                    {
+                      "title": "package",
+                      "value": "package"
+                    }
+                  ]
+                },
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "recipeIngredient"
+          }
+        ],
+        "name": "ingredients",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Bold"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "number",
+                "title": "Numbered"
+              },
+              {
+                "value": "bullet",
+                "title": "Bullet"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "name": "instructions",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "category"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to category"
+          }
+        ],
+        "name": "categories",
+        "type": "array"
+      }
+    ],
+    "name": "recipe",
+    "type": "document"
+  }
+]
