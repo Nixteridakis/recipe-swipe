@@ -13,19 +13,17 @@ A modern recipe app built with Next.js and Sanity, focused on fast recipe discov
 
 ## Screenshots
 
-> Tip: move screenshots into `docs/screenshots/` for cleaner README paths.
-
 ### Discover
 
-![Discover](prototypes/stitch_recipe_swipe_interface/all_recipes_grid_view/screen.png)
+![Discover](docs/screenshots/swipe_cards.webp)
 
-### Ingredients Cart
+### Recipe book
 
-![Ingredients Cart](prototypes/stitch_recipe_swipe_interface/ingredientsPage/screen.png)
+![Ingredients Cart](docs/screenshots/all_recipes.webp)
 
-### Chef Profile
+### Shopping Cart
 
-![Chef Profile](prototypes/stitch_recipe_swipe_interface/chef_profile_culinary_insights_only/screen.png)
+![Shopping cart](docs/screenshots/shopping_cart.webp)
 
 ## Tech Stack
 
