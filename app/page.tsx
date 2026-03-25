@@ -27,9 +27,10 @@ export default async function Home() {
   const imageByRef: Record<string, string> = {};
 
   for (const recipe of recipes) {
-    const imageRef = recipe.image?.asset?._ref;
-    if (imageRef && !imageByRef[imageRef]) {
-      imageByRef[imageRef] = urlFor(recipe.image).width(900).height(1200).url();
+    const image = recipe.image;
+    const imageRef = image?.asset?._ref;
+    if (image && imageRef && !imageByRef[imageRef]) {
+      imageByRef[imageRef] = urlFor(image).width(900).height(1200).url();
     }
   }
 

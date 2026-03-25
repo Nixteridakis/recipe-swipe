@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
+import type { TypedObject } from "@portabletext/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { recipeBySlugQuery } from "@/sanity/lib/queries";
@@ -32,7 +33,7 @@ type Recipe = {
   prepTime?: number;
   cookTime?: number;
   ingredients?: RecipeIngredient[];
-  instructions?: unknown[];
+  instructions?: TypedObject[];
   categories?: { _id: string; name: string; slug?: { current: string } }[];
 };
 
@@ -83,7 +84,7 @@ function formatIngredient(ing: RecipeIngredient): string {
   return parts.length ? `${parts.join(" ")} ${name}` : name;
 }
 
-function extractInstructionSteps(instructions?: unknown[]): string[] {
+function extractInstructionSteps(instructions?: TypedObject[]): string[] {
   if (!Array.isArray(instructions)) return [];
 
   return instructions.flatMap((block) => {

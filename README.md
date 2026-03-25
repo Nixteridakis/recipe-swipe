@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recipe Swipe
+
+A modern recipe app built with Next.js and Sanity, focused on fast recipe discovery, rich recipe detail pages, and a practical ingredient cart workflow.
+
+## Highlights
+
+- Swipe-style discovery flow for exploring recipes
+- Category-aware recipe cards and browsing
+- Recipe detail pages with ingredients and instructions
+- Ingredient/cart page with quantity controls and check states
+- Sanity-powered content model for recipes, categories, and ingredients
+- Recipe import flow to speed up content creation
+
+## Screenshots
+
+> Tip: move screenshots into `docs/screenshots/` for cleaner README paths.
+
+### Discover
+
+![Discover](prototypes/stitch_recipe_swipe_interface/all_recipes_grid_view/screen.png)
+
+### Ingredients Cart
+
+![Ingredients Cart](prototypes/stitch_recipe_swipe_interface/ingredientsPage/screen.png)
+
+### Chef Profile
+
+![Chef Profile](prototypes/stitch_recipe_swipe_interface/chef_profile_culinary_insights_only/screen.png)
+
+## Tech Stack
+
+- **Framework:** Next.js 16, React 19, TypeScript
+- **CMS:** Sanity (`next-sanity`, `@sanity/image-url`)
+- **Styling:** CSS Modules (+ Sass available)
+- **Runtime/Env:** Varlock integration for typed env loading
+
+## App Routes
+
+- `/` — Discover
+- `/recipes` — Recipes listing
+- `/recipe/[slug]` — Recipe detail
+- `/cart` — Ingredient cart
+- `/import` — Recipe import
+- `/studio` — Sanity Studio
 
 ## Getting Started
 
-First, run the development server:
+### 1) Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2) Configure environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create `.env.local` in the project root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=your_dataset
+SANITY_WRITE_TOKEN=your_sanity_write_token
+```
 
-## Learn More
+### 3) Run the app
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open app at http://localhost:3000
+Open sanity studio at http://localhost:3000/studio

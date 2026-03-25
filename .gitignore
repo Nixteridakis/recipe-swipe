@@ -42,3 +42,12 @@ next-env.d.ts
 
 # Theme prototypes
 /prototypes
+
+# Build
+/dist
+
+# Editor
+.vscode
+
+# Plans
+/plans
