@@ -206,7 +206,7 @@ export default function CartPage() {
             {!items.length ? (
               <span className={styles.recipeTagMuted}>No recipes selected yet</span>
             ) : null}
-            <Link href="/recipes" className={styles.addRecipeButton}>
+            <Link href="/" className={styles.addRecipeButton}>
               Add Recipe +
             </Link>
           </div>

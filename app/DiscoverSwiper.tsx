@@ -173,7 +173,7 @@ export function DiscoverSwiper({ recipes, imageByRef }: DiscoverSwiperProps) {
                 href={
                   current.slug?.current
                     ? `/recipe/${encodeURIComponent(current.slug.current)}`
-                    : "/recipes"
+                    : "/"
                 }
                 className={styles.actionPrimary}
                 aria-label="Open recipe"

@@ -21,15 +21,15 @@ type NavItem = {
 const primaryNav: NavItem[] = [
   {
     label: "Discover",
-    href: "/",
+    href: "/discover",
     icon: "home",
-    match: (pathname) => pathname === "/",
+    match: (pathname) => pathname === "/discover",
   },
   {
     label: "Recipes",
-    href: "/recipes",
+    href: "/",
     icon: "list",
-    match: (pathname) => pathname.startsWith("/recipes") || pathname.startsWith("/recipe/"),
+    match: (pathname) => pathname === "/" || pathname.startsWith("/recipe/"),
   },
   {
     label: "Shopping Cart",
