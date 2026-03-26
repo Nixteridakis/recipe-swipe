@@ -110,9 +110,6 @@ export function AppShell({ children }: AppShellProps) {
             <Link href="/import" className={styles.importLink}>
               Import
             </Link>
-            <div className={styles.avatar}>
-              <AppIcon name="chef-hat" className={styles.avatarIcon} />
-            </div>
           </div>
         </div>
       </header>

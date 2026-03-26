@@ -7,6 +7,7 @@ import "./globals.css";
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -31,10 +32,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="default">
-      <body
-        className={`${plusJakartaSans.variable} ${beVietnamPro.variable} ${geistMono.variable}`}
-      >
+    <html
+      lang="en"
+      data-theme="default"
+      className={`${plusJakartaSans.variable} ${beVietnamPro.variable} ${geistMono.variable}`}
+    >
+      <body>
         <CartProvider>
           <AppShell>{children}</AppShell>
         </CartProvider>
