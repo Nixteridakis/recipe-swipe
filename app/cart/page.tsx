@@ -1,54 +1,191 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { client } from "@/sanity/lib/client";
+import { recipesByIdsQuery } from "@/sanity/lib/queries";
 import { AppIcon } from "../AppIcon";
 import { useCart } from "../cart-context";
 import styles from "./page.module.css";
+
+type ShoppingIngredient = {
+  _key: string;
+  quantity?: number;
+  unit?: string;
+  ingredient?: {
+    _id?: string;
+    name?: string;
+    category?: string;
+  };
+};
+
+type ShoppingRecipe = {
+  _id: string;
+  title?: string;
+  ingredients?: ShoppingIngredient[];
+};
+
+type AggregatedIngredient = {
+  id: string;
+  ingredientId: string;
+  name: string;
+  category: string;
+  unit: string;
+  quantity: number;
+  recipes: Set<string>;
+  unitConflict: boolean;
+};
+
+function normalizeUnit(unit?: string) {
+  return (unit ?? "").trim().toLowerCase();
+}
+
+function normalizeCategory(category?: string) {
+  const c = (category ?? "").trim();
+  return c ? c[0].toUpperCase() + c.slice(1) : "Other";
+}
+
+function formatQuantity(value: number) {
+  if (Number.isInteger(value)) return String(value);
+  return value.toFixed(2).replace(/\.?0+$/, "");
+}
 
 export default function CartPage() {
   const { items, removeFromCart, clearCart } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [hidden, setHidden] = useState<Record<string, boolean>>({});
+  const [recipes, setRecipes] = useState<ShoppingRecipe[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      if (!items.length) {
+        setRecipes([]);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const next = (await client.fetch(recipesByIdsQuery, {
+          ids: items.map((item) => item._id),
+        })) as ShoppingRecipe[];
+        setRecipes(Array.isArray(next) ? next : []);
+      } catch {
+        setRecipes([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    void load();
+  }, [items]);
+
+  const aggregatedItems = useMemo(() => {
+    const map = new Map<string, AggregatedIngredient>();
+    const ingredientUnits = new Map<string, Set<string>>();
+
+    for (const recipe of recipes) {
+      for (const ing of recipe.ingredients ?? []) {
+        const ingredientName = ing.ingredient?.name?.trim();
+        if (!ingredientName) continue;
+        const ingredientId = ing.ingredient?._id ?? ingredientName.toLowerCase();
+        const unit = normalizeUnit(ing.unit);
+        const quantity = typeof ing.quantity === "number" && Number.isFinite(ing.quantity) ? ing.quantity : 0;
+        const key = `${ingredientId}::${unit || "unitless"}`;
+        const category = normalizeCategory(ing.ingredient?.category);
+
+        if (!ingredientUnits.has(ingredientId)) ingredientUnits.set(ingredientId, new Set());
+        ingredientUnits.get(ingredientId)?.add(unit || "unitless");
+
+        const existing = map.get(key);
+        if (existing) {
+          existing.quantity += quantity;
+          existing.recipes.add(recipe._id);
+          continue;
+        }
+        map.set(key, {
+          id: key,
+          ingredientId,
+          name: ingredientName,
+          category,
+          unit,
+          quantity,
+          recipes: new Set([recipe._id]),
+          unitConflict: false,
+        });
+      }
+    }
+
+    return Array.from(map.values())
+      .map((item) => ({
+        ...item,
+        unitConflict: (ingredientUnits.get(item.ingredientId)?.size ?? 0) > 1,
+      }))
+      .filter((item) => !hidden[item.id])
+      .sort((a, b) => {
+        if (a.category !== b.category) return a.category.localeCompare(b.category);
+        return a.name.localeCompare(b.name);
+      });
+  }, [recipes, hidden]);
+
+  const groupedItems = useMemo(() => {
+    const grouped = new Map<string, AggregatedIngredient[]>();
+    for (const item of aggregatedItems) {
+      if (!grouped.has(item.category)) grouped.set(item.category, []);
+      grouped.get(item.category)?.push(item);
+    }
+    return Array.from(grouped.entries());
+  }, [aggregatedItems]);
 
   useEffect(() => {
     setQuantities((prev) => {
       const next = { ...prev };
-      for (const item of items) {
-        if (next[item._id] == null) next[item._id] = 1;
+      for (const item of aggregatedItems) {
+        if (next[item.id] == null) next[item.id] = 1;
       }
       return next;
     });
     setChecked((prev) => {
       const next = { ...prev };
-      for (const item of items) {
-        if (next[item._id] == null) next[item._id] = false;
+      for (const item of aggregatedItems) {
+        if (next[item.id] == null) next[item.id] = false;
       }
       return next;
     });
-  }, [items]);
+  }, [aggregatedItems]);
 
-  const itemCountLabel = `${String(items.length).padStart(2, "0")} ITEMS`;
-  const totalUnits = items.reduce((total, item) => total + (quantities[item._id] ?? 1), 0);
-  const checkedCount = items.reduce((total, item) => total + (checked[item._id] ? 1 : 0), 0);
+  const itemCountLabel = `${String(aggregatedItems.length).padStart(2, "0")} ITEMS`;
+  const totalUnits = aggregatedItems.reduce(
+    (total, item) => total + (quantities[item.id] ?? 1),
+    0,
+  );
+  const checkedCount = aggregatedItems.reduce(
+    (total, item) => total + (checked[item.id] ? 1 : 0),
+    0,
+  );
   const estimatedCost = totalUnits * 6.5;
-  const organicCount = items.length ? Math.round((checkedCount / items.length) * 100) : 0;
+  const organicCount = aggregatedItems.length
+    ? Math.round((checkedCount / aggregatedItems.length) * 100)
+    : 0;
 
-  function updateQty(recipeId: string, delta: number) {
+  function updateQty(itemId: string, delta: number) {
     setQuantities((prev) => {
-      const current = prev[recipeId] ?? 1;
-      return { ...prev, [recipeId]: Math.max(1, current + delta) };
+      const current = prev[itemId] ?? 1;
+      return { ...prev, [itemId]: Math.max(1, current + delta) };
     });
   }
 
-  function toggleChecked(recipeId: string) {
-    setChecked((prev) => ({ ...prev, [recipeId]: !prev[recipeId] }));
+  function toggleChecked(itemId: string) {
+    setChecked((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   }
 
   function clearChecked() {
-    for (const item of items) {
-      if (checked[item._id]) removeFromCart(item._id);
-    }
+    setHidden((prev) => {
+      const next = { ...prev };
+      for (const item of aggregatedItems) {
+        if (checked[item.id]) next[item.id] = true;
+      }
+      return next;
+    });
   }
 
   return (
@@ -97,54 +234,69 @@ export default function CartPage() {
               </button>
             </div>
 
-            <ul className={styles.list}>
-              {items.map((item) => (
-                <li
-                  key={item._id}
-                  className={`${styles.item} ${checked[item._id] ? styles.itemChecked : ""}`}
-                >
-                  <button
-                    type="button"
-                    className={styles.checkButton}
-                    onClick={() => toggleChecked(item._id)}
-                    aria-pressed={checked[item._id]}
-                  />
-                  <div className={styles.itemBody}>
-                    <p className={styles.itemTitle}>{item.title ?? "Untitled recipe"}</p>
-                    <p className={styles.itemSubtitle}>Traditional</p>
-                  </div>
+            {isLoading ? <p className={styles.emptyCopy}>Building shopping list...</p> : null}
+            {!isLoading && !aggregatedItems.length ? (
+              <p className={styles.emptyCopy}>No ingredients found for selected recipes.</p>
+            ) : null}
 
-                  <div className={styles.qtyControl}>
-                    <button
-                      type="button"
-                      className={styles.qtyButton}
-                      onClick={() => updateQty(item._id, -1)}
-                      aria-label="Decrease quantity"
+            {groupedItems.map(([category, group]) => (
+              <section key={category} className={styles.group}>
+                <h3 className={styles.groupTitle}>{category}</h3>
+                <ul className={styles.list}>
+                  {group.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`${styles.item} ${checked[item.id] ? styles.itemChecked : ""}`}
                     >
-                      -
-                    </button>
-                    <span className={styles.qtyValue}>x{quantities[item._id] ?? 1}</span>
-                    <button
-                      type="button"
-                      className={styles.qtyButton}
-                      onClick={() => updateQty(item._id, 1)}
-                      aria-label="Increase quantity"
-                    >
-                      +
-                    </button>
-                  </div>
+                      <button
+                        type="button"
+                        className={styles.checkButton}
+                        onClick={() => toggleChecked(item.id)}
+                        aria-pressed={checked[item.id]}
+                      />
+                      <div className={styles.itemBody}>
+                        <p className={styles.itemTitle}>{item.name}</p>
+                        <p className={styles.itemSubtitle}>
+                          {item.quantity > 0
+                            ? `${formatQuantity(item.quantity)}${item.unit ? ` ${item.unit}` : ""}`
+                            : "Quantity TBD"}
+                          {item.unitConflict ? " · Multiple units used" : ""}
+                        </p>
+                      </div>
 
-                  <button
-                    type="button"
-                    className={styles.removeButton}
-                    onClick={() => removeFromCart(item._id)}
-                    aria-label="Remove from cart"
-                  >
-                    <AppIcon name="trash" className={styles.removeIcon} />
-                  </button>
-                </li>
-              ))}
-            </ul>
+                      <div className={styles.qtyControl}>
+                        <button
+                          type="button"
+                          className={styles.qtyButton}
+                          onClick={() => updateQty(item.id, -1)}
+                          aria-label="Decrease quantity"
+                        >
+                          -
+                        </button>
+                        <span className={styles.qtyValue}>x{quantities[item.id] ?? 1}</span>
+                        <button
+                          type="button"
+                          className={styles.qtyButton}
+                          onClick={() => updateQty(item.id, 1)}
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        className={styles.removeButton}
+                        onClick={() => setHidden((prev) => ({ ...prev, [item.id]: true }))}
+                        aria-label="Remove from shopping list"
+                      >
+                        <AppIcon name="trash" className={styles.removeIcon} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
           </div>
 
           <aside className={styles.sideColumn}>

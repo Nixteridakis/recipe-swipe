@@ -162,6 +162,35 @@
   text-transform: uppercase;
 }
 
+.quickAddButton {
+  margin-top: var(--space-3);
+  width: 2.85rem;
+  height: 2.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-soft));
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-soft);
+  transition: filter var(--transition-fast);
+}
+
+.quickAddButton svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.quickAddButton:hover {
+  filter: brightness(1.05);
+}
+
+.quickAddButton[aria-pressed="true"] {
+  background: linear-gradient(135deg, var(--color-tertiary), var(--color-tertiary-soft));
+  color: var(--color-on-tertiary);
+}
+
 .contentGrid {
   display: grid;
   gap: var(--space-5);

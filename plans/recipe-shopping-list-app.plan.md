@@ -4,10 +4,10 @@ overview: Build a personal Next.js + Sanity recipe app that lets me select recip
 todos:
   - id: varlock-now
     content: Implement VarLock for local/dev/build env loading and document workflow
-    status: pending
+    status: completed
   - id: recipe-selection-flow
     content: Finalize recipe selection UX and state model (local-first, no auth)
-    status: pending
+    status: completed
   - id: shopping-list-generation
     content: Aggregate selected recipe ingredients with sane unit handling and category grouping
     status: pending
@@ -36,8 +36,8 @@ Completed foundation:
 
 Current focus:
 
-- [ ] varlock-now/
-- [ ] recipe-selection-flow
+- [x] ~~varlock-now~~
+- [x] ~~recipe-selection-flow~~
 - [ ] shopping-list-generation
 - [ ] bring-integration
 - [ ] ui-system-decision
@@ -56,8 +56,14 @@ Current focus:
 
 ## Immediate Next Step
 
-1. Implement VarLock now:
-   - Add `.env.schema`
-   - Update scripts to run dev/build with VarLock
-   - Verify `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` resolution locally
-   - Define Netlify env strategy (VarLock in CI vs Netlify UI env vars)
+1. ~~Implement VarLock now~~ (completed):
+   - ~~Add `.env.schema`~~
+   - ~~Update scripts to run dev/build with VarLock~~
+   - ~~Verify `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` resolution locally~~
+   - ~~Define Netlify env strategy (VarLock in CI vs Netlify UI env vars)~~
+
+2. Implement shopping-list-generation:
+   - Aggregate ingredients across selected recipes by ingredient identity
+   - Normalize units and sum quantities where compatible
+   - Group final list by grocery category
+   - Validate with at least 3 recipes containing overlapping ingredients

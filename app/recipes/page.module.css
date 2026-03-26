@@ -485,7 +485,9 @@
 }
 
 .card:hover .quickAddButton,
-.card:focus-within .quickAddButton {
+.card:focus-within .quickAddButton,
+.featuredCard:hover .quickAddButton,
+.featuredCard:focus-within .quickAddButton {
   opacity: 1;
   transform: translateY(0) scale(1);
 }

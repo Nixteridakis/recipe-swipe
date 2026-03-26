@@ -8,6 +8,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { recipeBySlugQuery } from "@/sanity/lib/queries";
 import { AppIcon } from "@/app/AppIcon";
+import { AddToCartButton } from "@/app/AddToCartButton";
 import styles from "./page.module.css";
 
 type RecipeIngredient = {
@@ -208,6 +209,15 @@ export default async function RecipePage({
                   <AppIcon name="arrow-right" className={styles.metaIcon} />
                 </a>
               ) : null}
+              <AddToCartButton
+                className={styles.quickAddButton}
+                recipe={{
+                  _id: recipe._id,
+                  title: recipe.title,
+                  slug: recipe.slug,
+                  imageRef: recipe.image?.asset?._ref,
+                }}
+              />
             </div>
           </div>
         </header>
