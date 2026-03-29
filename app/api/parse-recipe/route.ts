@@ -341,10 +341,14 @@ export async function POST(req: Request) {
     hasPastedHtml: pastedHtml != null,
   });
 
-  if (!url) {
+  if (!url && !pastedHtml) {
     return cors(
       NextResponse.json(
-        { error: "Missing `url` in request body." },
+        {
+          error: "bad_request",
+          message:
+            "Add a recipe URL, or paste HTML in the fallback section so we can read structured recipe data.",
+        },
         { status: 400 }
       )
     );
@@ -363,7 +367,7 @@ export async function POST(req: Request) {
 
     if (looksNormalized) {
       const recipe = rawRecipe as ParsedRecipe;
-      recipe.sourceUrl = url;
+      recipe.sourceUrl = url ?? "https://manual-import.local/pasted-html";
       return cors(NextResponse.json({ recipe }));
     }
 
@@ -374,7 +378,7 @@ export async function POST(req: Request) {
     );
     if (isRecipe) {
       const recipe = normalizeJsonLdRecipe(rawRecipe);
-      recipe.sourceUrl = url;
+      recipe.sourceUrl = url ?? "https://manual-import.local/pasted-html";
       console.log(
         "[parse-recipe] normalized recipe (raw JSON-LD)",
         recipe.title,
@@ -394,6 +398,18 @@ export async function POST(req: Request) {
   if (pastedHtml) {
     html = pastedHtml;
   } else {
+    if (!url) {
+      return cors(
+        NextResponse.json(
+          {
+            error: "bad_request",
+            message:
+              "A recipe URL is required when not pasting HTML. Enter the page address or switch to the “Paste source code” section.",
+          },
+          { status: 400 }
+        )
+      );
+    }
     try {
       const parsedUrl = new URL(url);
       const origin = `${parsedUrl.protocol}//${parsedUrl.host}`;
@@ -416,9 +432,16 @@ export async function POST(req: Request) {
       });
 
       if (!res.ok) {
+        const isForbidden = res.status === 403;
+        const message = isForbidden
+          ? "That site blocked our server from loading the page (common with anti-bot or cookie walls). Use the Brasserie Chrome extension while the recipe tab is open, or copy the full page HTML (View source) and paste it under “Paste source code,” then click Import from HTML."
+          : `The recipe page returned HTTP ${res.status}, so we couldn’t read it from here. Try again later, use the extension, or paste the page HTML instead.`;
         return cors(
           NextResponse.json(
-            { error: `Site returned ${res.status} (${res.status === 403 ? "blocked bot/automation" : "request failed"}).` },
+            {
+              error: isForbidden ? "fetch_forbidden" : "fetch_http_error",
+              message,
+            },
             { status: 400 }
           )
         );
@@ -428,7 +451,11 @@ export async function POST(req: Request) {
     } catch {
       return cors(
         NextResponse.json(
-          { error: "Failed to fetch the URL (network error or blocked)." },
+          {
+            error: "fetch_failed",
+            message:
+              "We couldn’t connect to that URL from the server (network error, DNS, or TLS). Check the link, or use the Chrome extension / pasted HTML so the recipe isn’t fetched by our backend.",
+          },
           { status: 400 }
         )
       );
@@ -439,13 +466,17 @@ export async function POST(req: Request) {
   if (!recipe) {
     return cors(
       NextResponse.json(
-        { error: "No JSON-LD Recipe found on that page." },
+        {
+          error: "no_jsonld_recipe",
+          message:
+            "We didn’t find schema.org Recipe data (JSON-LD) in that HTML. Many sites still work via the Chrome extension (it reads the live page), or try another URL that publishes machine-readable recipes.",
+        },
         { status: 404 }
       )
     );
   }
 
-  recipe.sourceUrl = url;
+  recipe.sourceUrl = url ?? "https://manual-import.local/pasted-html";
   console.log(
     "[parse-recipe] normalized recipe (from HTML JSON-LD)",
     recipe.title,

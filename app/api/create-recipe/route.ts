@@ -128,7 +128,10 @@ export async function POST(req: Request) {
   if (!url || !isRecord(rawRecipe)) {
     return cors(
       NextResponse.json(
-        { error: "Missing `url` or invalid `recipe` payload." },
+        {
+          error: "bad_request",
+          message: "Something was wrong with the save request. Go back to Import and parse the recipe again.",
+        },
         { status: 400 }
       )
     );
@@ -147,8 +150,9 @@ export async function POST(req: Request) {
     return cors(
       NextResponse.json(
         {
-          error:
-            "Missing SANITY_WRITE_TOKEN. Add it to your .env.local to enable recipe creation.",
+          error: "missing_write_token",
+          message:
+            "Recipe saving isn’t configured: add SANITY_WRITE_TOKEN to the server environment (e.g. .env.local) so Studio can create documents.",
         },
         { status: 500 }
       )

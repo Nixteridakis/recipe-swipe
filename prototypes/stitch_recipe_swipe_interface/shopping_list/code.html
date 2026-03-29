@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-panel {
+            background: rgba(255, 244, 243, 0.2);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-variant": "#ffd3ce",
+                "surface-container-high": "#ffdad6",
+                "surface-bright": "#fff4f3",
+                "on-secondary-container": "#614100",
+                "outline": "#a36762",
+                "background": "#fff4f3",
+                "on-tertiary-fixed-variant": "#376430",
+                "surface-dim": "#ffc7c2",
+                "on-primary-container": "#451100",
+                "secondary": "#7b5400",
+                "on-primary-fixed": "#000000",
+                "tertiary-fixed-dim": "#abdf9e",
+                "surface-container": "#ffe2de",
+                "on-secondary-fixed": "#483000",
+                "surface-container-highest": "#ffd3ce",
+                "on-error-container": "#570008",
+                "error": "#b31b25",
+                "on-error": "#ffefee",
+                "on-tertiary-container": "#2d5a27",
+                "tertiary-fixed": "#b9eeab",
+                "primary": "#a63400",
+                "inverse-on-surface": "#ce8c86",
+                "tertiary-container": "#b9eeab",
+                "surface-tint": "#a63400",
+                "error-dim": "#9f0519",
+                "primary-fixed": "#ff7948",
+                "tertiary-dim": "#2d5927",
+                "on-surface-variant": "#834c48",
+                "primary-fixed-dim": "#f46732",
+                "inverse-surface": "#240303",
+                "inverse-primary": "#f16530",
+                "tertiary": "#386631",
+                "surface": "#fff4f3",
+                "secondary-dim": "#6b4900",
+                "on-background": "#4e211e",
+                "outline-variant": "#e09c96",
+                "on-secondary": "#fff1df",
+                "secondary-fixed": "#ffc96f",
+                "on-secondary-fixed-variant": "#6c4a00",
+                "primary-dim": "#912d00",
+                "on-tertiary": "#d2ffc4",
+                "error-container": "#fb5151",
+                "primary-container": "#ff7948",
+                "on-surface": "#4e211e",
+                "secondary-container": "#ffc96f",
+                "on-tertiary-fixed": "#1a4716",
+                "on-primary": "#ffefeb"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Be Vietnam Pro"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r border-[#e09c96]/15 bg-surface z-40">
+<div class="p-8">
+<h1 class="font-headline text-xl font-bold text-on-background tracking-tight">Brasserie</h1>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="text-on-surface-variant px-4 py-3 hover:bg-orange-50 rounded-full mx-2 transition-transform hover:scale-[1.02] active:scale-95 duration-150 flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-headline font-bold text-sm tracking-wide uppercase">Daily Mix</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 hover:bg-orange-50 rounded-full mx-2 transition-transform hover:scale-[1.02] active:scale-95 duration-150 flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="font-headline font-bold text-sm tracking-wide uppercase">Saved Recipes</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 hover:bg-orange-50 rounded-full mx-2 transition-transform hover:scale-[1.02] active:scale-95 duration-150 flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-headline font-bold text-sm tracking-wide uppercase">Meal Planner</span>
+</div>
+<div class="bg-gradient-to-r from-orange-700 to-orange-500 text-white rounded-full mx-2 my-1 px-4 py-3 transition-transform hover:scale-[1.02] active:scale-95 duration-150 flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-headline font-bold text-sm tracking-wide uppercase">Grocery List</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 hover:bg-orange-50 rounded-full mx-2 transition-transform hover:scale-[1.02] active:scale-95 duration-150 flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-headline font-bold text-sm tracking-wide uppercase">Settings</span>
+</div>
+</nav>
+<div class="p-6 bg-surface-container-low mx-4 mb-8 rounded-xl">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile chef hat icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzdXAez_HOdAJ06WkT5LKR8q6QHFysmawEzn7d3q1WqA7V4x-ghj3_doff9Ya14RPCZo8QDOpAcmhU2rtB9IjqR6jENBP3RvBMXN1NhhtELeKcibELGe9cJdoEOY2TWrZ1gHKkE9VWBI9fcLR0XbEjUL_v_igUg0Q31NiFQfKs9-pPe5eWDzylHugz1eTbOcRPIryk1Osk17uKUUTV6O7XXgt7WCC08-BPRtQOAOjUuB_KVTYM6u-UWNcvK6hXlSN8tPSt5Sqit3E"/>
+</div>
+<div>
+<p class="font-headline font-bold text-sm text-on-surface">Chef de Cuisine</p>
+<p class="text-xs text-on-surface-variant">Gold Member</p>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-full font-bold text-sm transition-all hover:opacity-90">Post a Recipe</button>
+</div>
+</aside>
+<header class="fixed top-0 w-full z-50 bg-[#fff4f3]/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black italic text-orange-800 tracking-tighter lg:hidden">Brasserie</span>
+<nav class="hidden md:flex items-center gap-8 ml-64">
+<a class="text-[#834c48] hover:text-orange-700 transition-colors" href="#">Discover</a>
+<a class="text-[#834c48] hover:text-orange-700 transition-colors" href="#">Chefs</a>
+<a class="text-[#834c48] hover:text-orange-700 transition-colors" href="#">Pantry</a>
+<a class="text-[#834c48] hover:text-orange-700 transition-colors" href="#">Seasons</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-surface-container-lowest px-4 py-2 rounded-full ring-1 ring-outline-variant/15">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-40 placeholder-on-surface-variant/50" placeholder="Search ingredients..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-white/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-white/50 rounded-full transition-all relative">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+</div>
+</div>
+</header>
+<main class="lg:ml-64 pt-24 pb-32 px-6 min-h-screen">
+<div class="max-w-4xl mx-auto">
+<section class="mb-12 relative overflow-hidden rounded-xl bg-surface-container-low p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-extrabold text-on-background mb-2 tracking-tight">Shopping List</h2>
+<p class="text-on-surface-variant text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="menu_book">menu_book</span>
+                        Ingredients for 4 recipes
+                    </p>
+<div class="mt-6 flex flex-wrap gap-2">
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider">Ratatouille</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider">Garlic Confit</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider">Sourdough</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider">+1 more</span>
+</div>
+</div>
+<div class="hidden md:block w-48 h-48 rounded-xl overflow-hidden rotate-3 shadow-2xl relative">
+<img class="w-full h-full object-cover" data-alt="Fresh vibrant vegetable selection for salad" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8v2VBK8DAmKKk4VuSWxfxBTk8Rnw649QRUgKELLF6wyqzaRwaLMI7qxZvuNgJ9UAwIX2-faIsPFvlmQ70lZtvggn2_UtBBXYhcaWjHLHGMnN2Bh-W8XJN4pAiBTna330QQtP47om_LwGAdK1QQTyHNXHMq7Q7EM6Bzoxy3B-FKwKnWF8clKQdBjNfrtk8z-1DK7eJ3tDbldf6qKx1MUoIuySs5y6624IdrQ38vR9WPv5w9U_BYUTRKelvBG8V7JYk96UzxHuzgx0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+</div>
+</section>
+<div class="grid grid-cols-1 gap-12">
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-surface">Produce</h3>
+</div>
+<div class="space-y-4">
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-tertiary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center cursor-pointer transition-colors hover:bg-tertiary/20">
+<span class="material-symbols-outlined text-tertiary opacity-0 group-hover:opacity-40" data-icon="check">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Heirloom Tomatoes</p>
+<p class="text-sm text-on-surface-variant">4 large, ripe</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Produce</span>
+</div>
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-tertiary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-tertiary flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface line-through opacity-50">Fresh Basil</p>
+<p class="text-sm text-on-surface-variant line-through opacity-50">1 large bunch</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Produce</span>
+</div>
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-tertiary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center cursor-pointer transition-colors hover:bg-tertiary/20">
+<span class="material-symbols-outlined text-tertiary opacity-0 group-hover:opacity-40" data-icon="check">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Shallots</p>
+<p class="text-sm text-on-surface-variant">3 medium</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Produce</span>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="kitchen">kitchen</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-surface">Pantry &amp; Spices</h3>
+</div>
+<div class="space-y-4">
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-secondary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center cursor-pointer transition-colors hover:bg-secondary/20">
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-40" data-icon="check">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Extra Virgin Olive Oil</p>
+<p class="text-sm text-on-surface-variant">Cold pressed, 500ml</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Pantry</span>
+</div>
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-secondary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center cursor-pointer transition-colors hover:bg-secondary/20">
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-40" data-icon="check">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Maldon Sea Salt</p>
+<p class="text-sm text-on-surface-variant">Flaky texture</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Pantry</span>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="egg">egg</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-surface">Dairy &amp; Cold</h3>
+</div>
+<div class="space-y-4">
+<div class="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center cursor-pointer transition-colors hover:bg-primary/20">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-40" data-icon="check">check</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Unsalted Butter</p>
+<p class="text-sm text-on-surface-variant">European style, 250g</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter">Dairy</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<div class="fixed bottom-8 right-8 z-50 md:hidden">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-xl flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<nav class="md:hidden fixed bottom-0 w-full bg-[#fff4f3]/80 backdrop-blur-xl z-50 flex justify-around items-center py-4 px-2">
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-[10px] mt-1 uppercase font-bold tracking-widest">Mix</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="text-[10px] mt-1 uppercase font-bold tracking-widest">Saved</span>
+</div>
+<div class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="text-[10px] mt-1 uppercase font-bold tracking-widest">List</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="text-[10px] mt-1 uppercase font-bold tracking-widest">Plan</span>
+</div>
+</nav>
+<footer class="w-full py-12 px-6 bg-[#ffe2de] dark:bg-[#2d1614] mt-20">
+<div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-bold tracking-tight text-[#4e211e] text-lg">Brasserie Editorial</span>
+<p class="beVietnamPro text-sm font-light text-orange-800 dark:text-orange-200 mt-1 opacity-70">© 2024 The Digital Brasserie Editorial. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Privacy Policy</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Terms of Service</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Contact Us</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Careers</a>
+</div>
+</div>
+</footer>
+</body></html>

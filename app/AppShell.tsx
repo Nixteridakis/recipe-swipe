@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AppIcon } from "./AppIcon";
 import { useCart } from "./cart-context";
 import styles from "./app-shell.module.css";
@@ -87,6 +87,36 @@ function NavItemLink({
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const { items } = useCart();
+  const [headerHidden, setHeaderHidden] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const delta = currentY - lastY;
+
+        // Keep the header visible near the top for orientation.
+        if (currentY <= 24) {
+          setHeaderHidden(false);
+        } else if (delta > 8) {
+          setHeaderHidden(true);
+        } else if (delta < -8) {
+          setHeaderHidden(false);
+        }
+
+        lastY = currentY;
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   if (pathname.startsWith("/studio")) {
     return <>{children}</>;
@@ -94,7 +124,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className={styles.shell}>
-      <header className={styles.header}>
+      <header className={`${styles.header} ${headerHidden ? styles.headerHidden : ""}`.trim()}>
         <div className={styles.headerInner}>
           <div className={styles.brandBlock}>
             <Link href="/" className={styles.brand}>
@@ -107,6 +137,9 @@ export function AppShell({ children }: AppShellProps) {
               <AppIcon name="search" className={styles.actionIcon} />
               <input type="search" placeholder="Search recipes..." aria-label="Search recipes" />
             </label>
+            <Link href="/studio" className={styles.importLink}>
+              CREATE
+            </Link>
             <Link href="/import" className={styles.importLink}>
               Import
             </Link>

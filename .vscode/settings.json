@@ -1,4 +1,4 @@
 {
     //change the text size of the whole ide to 12px
-    "editor.fontSize": 12,
+    // "editor.fontSize": 12,
 }

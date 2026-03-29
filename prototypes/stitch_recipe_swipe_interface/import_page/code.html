@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Import Recipe | Saffron &amp; Sage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700;1,800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#912d00",
+              "primary-fixed": "#ff7948",
+              "surface-container-lowest": "#ffffff",
+              "primary-container": "#ff7948",
+              "on-tertiary-fixed-variant": "#376430",
+              "on-surface-variant": "#834c48",
+              "on-primary-container": "#451100",
+              "secondary-fixed": "#ffc96f",
+              "outline-variant": "#e09c96",
+              "on-surface": "#4e211e",
+              "tertiary-container": "#b9eeab",
+              "on-tertiary-container": "#2d5a27",
+              "surface-container-highest": "#ffd3ce",
+              "outline": "#a36762",
+              "error": "#b31b25",
+              "inverse-primary": "#f16530",
+              "inverse-surface": "#240303",
+              "on-primary-fixed-variant": "#551700",
+              "tertiary": "#386631",
+              "surface-bright": "#fff4f3",
+              "surface-container": "#ffe2de",
+              "surface-dim": "#ffc7c2",
+              "surface": "#fff4f3",
+              "tertiary-dim": "#2d5927",
+              "error-container": "#fb5151",
+              "tertiary-fixed-dim": "#abdf9e",
+              "on-tertiary-fixed": "#1a4716",
+              "on-error-container": "#570008",
+              "on-background": "#4e211e",
+              "secondary-container": "#ffc96f",
+              "surface-container-low": "#ffedeb",
+              "on-secondary-fixed": "#483000",
+              "primary-fixed-dim": "#f46732",
+              "secondary": "#7b5400",
+              "on-tertiary": "#d2ffc4",
+              "on-secondary": "#fff1df",
+              "on-error": "#ffefee",
+              "on-primary": "#ffefeb",
+              "surface-container-high": "#ffdad6",
+              "inverse-on-surface": "#ce8c86",
+              "on-secondary-container": "#614100",
+              "surface-tint": "#a63400",
+              "secondary-dim": "#6b4900",
+              "background": "#fff4f3",
+              "primary": "#a63400",
+              "secondary-fixed-dim": "#ffb623",
+              "tertiary-fixed": "#b9eeab",
+              "on-primary-fixed": "#000000",
+              "error-dim": "#9f0519",
+              "on-secondary-fixed-variant": "#6c4a00",
+              "surface-variant": "#ffd3ce"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold italic text-[#F0642F] font-['Plus_Jakarta_Sans']">Saffron &amp; Sage</span>
+<div class="hidden md:flex items-center gap-6 font-['Plus_Jakarta_Sans'] text-sm tracking-tight">
+<a class="text-stone-600 hover:text-[#F0642F] transition-colors" href="#">Recipes</a>
+<a class="text-stone-600 hover:text-[#F0642F] transition-colors" href="#">Collections</a>
+<a class="text-[#F0642F] border-b-2 border-[#F0642F] pb-1 font-semibold" href="#">Import</a>
+<a class="text-stone-600 hover:text-[#F0642F] transition-colors" href="#">Journal</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-stone-50 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-stone-600">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-stone-50 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-stone-600">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-28 pb-20 flex-grow">
+<div class="max-w-6xl mx-auto px-6">
+<!-- Header Section -->
+<div class="mb-12">
+<h1 class="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4">Add to your Collection</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">Save recipes from across the web into your personal digital cookbook. Choose the method that works best for you.</p>
+</div>
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Section One: Chrome Extension (Bento Style Large Card) -->
+<section class="lg:col-span-12 bg-surface-container-low rounded-xl p-8 md:p-12 overflow-hidden relative border border-outline-variant/30">
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="z-10">
+<div class="flex items-center gap-3 mb-6">
+<span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary font-bold">1</span>
+<span class="uppercase tracking-widest text-xs font-bold text-primary">The Best Way</span>
+</div>
+<h2 class="text-3xl font-bold text-on-surface mb-6">Install the Saffron &amp; Sage Extension</h2>
+<ul class="space-y-6 text-on-surface-variant">
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-primary" data-weight="fill">download</span>
+<div>
+<p class="font-bold text-on-surface">Visit the Web Store</p>
+<p class="text-sm">Head over to the Chrome or Edge extension store and search for our name.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-primary" data-weight="fill">add_task</span>
+<div>
+<p class="font-bold text-on-surface">Click "Add to Chrome"</p>
+<p class="text-sm">Once installed, pin the extension to your toolbar for quick access.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-primary" data-weight="fill">auto_awesome</span>
+<div>
+<p class="font-bold text-on-surface">One-Click Save</p>
+<p class="text-sm">When browsing any recipe site, just click the Saffron icon to import instantly.</p>
+</div>
+</li>
+</ul>
+<button class="mt-8 px-8 py-4 bg-primary text-on-primary font-bold rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">extension</span>
+                                Add to Browser
+                            </button>
+</div>
+<div class="relative group">
+<div class="absolute -inset-4 bg-primary-container/20 rounded-3xl blur-2xl group-hover:bg-primary-container/30 transition-all"></div>
+<div class="relative aspect-video rounded-xl bg-surface-container-highest border border-outline-variant/50 overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover opacity-80" data-alt="Modern web browser interface showing a sleek recipe website with a small orange extension icon being clicked by a cursor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK9htkcACk2yxiRUGlG6RB5YuhOxrnuxag-aoSUIY5jv-ml5-_TdmHj-5pH51gBOu1DeyHYO7-_sfiOq0hS72TCP9bnPELVCoP1gtBeIlhUJQ0im5knN6gDeJeZNq5BpoNYzDgMbXaCarKcgEvdY0npHBTIhVyv8iGvdjGrXbhK0NwfDC5XfUZRl1_JiZ6KE8qBJlUIzvfDidrgrkKqdFsN_I-0hYed8u6YpB-5KFTL4H7Qc9vbRwnVppI4NLUrHwI5vUJPVyY3QU"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[2px]">
+<div class="bg-white/90 p-4 rounded-xl shadow-xl flex items-center gap-3 animate-pulse">
+<span class="material-symbols-outlined text-[#F0642F] text-4xl" data-weight="fill">play_circle</span>
+<span class="font-bold text-stone-800">Watch it in action</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section Two: URL Paste (Clean & Prominent) -->
+<section class="lg:col-span-7 bg-surface-container-low rounded-xl p-8 border border-outline-variant/30 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-6">
+<span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary font-bold">2</span>
+<span class="uppercase tracking-widest text-xs font-bold text-primary">Quick &amp; Simple</span>
+</div>
+<h2 class="text-2xl font-bold text-on-surface mb-2">Paste a recipe URL here</h2>
+<p class="text-on-surface-variant mb-8 text-sm">We'll scan the page and automatically extract ingredients, steps, and photos for you.</p>
+<div class="relative flex flex-col gap-4">
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">link</span>
+<input class="w-full pl-12 pr-4 py-4 rounded-xl border-outline-variant bg-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="https://cool-recipes.com/best-pasta" type="url"/>
+</div>
+<button class="w-full py-4 bg-[#F0642F] text-white font-bold rounded-xl shadow-md hover:bg-primary-dim transition-all active:scale-[0.98]">
+                            Parse URL
+                        </button>
+</div>
+<div class="mt-6 flex items-start gap-3 p-4 bg-tertiary-container/30 rounded-lg">
+<span class="material-symbols-outlined text-tertiary-dim text-sm">info</span>
+<p class="text-xs text-on-tertiary-container leading-snug">Note: If the site requires a subscription or is behind a paywall, the automatic fetch might not be able to see the full content.</p>
+</div>
+</section>
+<!-- Section Three: Paste HTML (Technical Fallback / Subtler) -->
+<section class="lg:col-span-5 bg-surface-container-low rounded-xl p-8 border border-outline-variant/30 border-dashed">
+<div class="flex items-center gap-3 mb-6">
+<span class="flex items-center justify-center w-10 h-10 rounded-full bg-outline-variant text-on-surface font-bold">3</span>
+<span class="uppercase tracking-widest text-xs font-bold text-outline">Technical Fallback</span>
+</div>
+<h2 class="text-xl font-bold text-on-surface mb-2">Paste Source Code</h2>
+<p class="text-on-surface-variant mb-6 text-sm leading-snug">Use this if the website blocks our robots or if you have the recipe in an offline HTML file.</p>
+<div class="group">
+<label class="block text-xs font-bold text-outline-variant mb-2 uppercase tracking-wide">HTML Code Block</label>
+<textarea class="w-full p-4 rounded-xl border-outline-variant bg-stone-50 focus:bg-white focus:ring-2 focus:ring-outline transition-all text-xs font-mono" placeholder="Paste &lt;html&gt; source code here..." rows="6"></textarea>
+</div>
+<button class="mt-4 w-full py-3 bg-surface-container-highest text-on-surface font-semibold rounded-xl hover:bg-stone-200 transition-all border border-outline-variant/20">
+                        Import from HTML
+                    </button>
+</section>
+</div>
+<!-- Helpful Tips Footer within Main -->
+<div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">camera_enhance</span>
+<div>
+<h4 class="font-bold text-on-surface">Image Auto-Magic</h4>
+<p class="text-xs text-on-surface-variant">We always try to pull the highest quality hero image from every recipe link.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">folder_managed</span>
+<div>
+<h4 class="font-bold text-on-surface">Smart Categorizing</h4>
+<p class="text-xs text-on-surface-variant">Imported recipes are automatically tagged with cuisine and dietary labels.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">verified</span>
+<div>
+<h4 class="font-bold text-on-surface">Precision Parsing</h4>
+<p class="text-xs text-on-surface-variant">Our engine recognizes fractions and units for easy scaling later.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-stone-50 border-t border-stone-200">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 gap-6 max-w-7xl mx-auto">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-lg font-black text-stone-900 font-['Plus_Jakarta_Sans']">Saffron &amp; Sage</span>
+<p class="text-stone-500 font-['Plus_Jakarta_Sans'] text-xs uppercase tracking-widest">© 2024 Saffron &amp; Sage Editorial. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-['Plus_Jakarta_Sans'] text-xs uppercase tracking-widest font-semibold">
+<a class="text-stone-500 hover:text-[#F0642F] transition-colors" href="#">Privacy Policy</a>
+<a class="text-stone-500 hover:text-[#F0642F] transition-colors" href="#">Terms of Service</a>
+<a class="text-stone-500 hover:text-[#F0642F] transition-colors" href="#">Support</a>
+<a class="text-stone-500 hover:text-[#F0642F] transition-colors" href="#">API Documentation</a>
+</div>
+</div>
+</footer>
+</body></html>

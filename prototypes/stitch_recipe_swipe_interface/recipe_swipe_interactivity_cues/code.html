@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#ffc96f",
+                        "primary-dim": "#912d00",
+                        "surface-bright": "#fff4f3",
+                        "on-secondary-fixed": "#483000",
+                        "outline-variant": "#e09c96",
+                        "primary": "#a63400",
+                        "background": "#fff4f3",
+                        "on-tertiary-fixed-variant": "#376430",
+                        "secondary": "#7b5400",
+                        "outline": "#a36762",
+                        "surface-container-highest": "#ffd3ce",
+                        "inverse-on-surface": "#ce8c86",
+                        "on-primary-container": "#451100",
+                        "on-surface": "#4e211e",
+                        "inverse-surface": "#240303",
+                        "tertiary-dim": "#2d5927",
+                        "error": "#b31b25",
+                        "surface": "#fff4f3",
+                        "on-secondary": "#fff1df",
+                        "on-background": "#4e211e",
+                        "tertiary": "#386631",
+                        "surface-container": "#ffe2de",
+                        "primary-container": "#ff7948",
+                        "on-surface-variant": "#834c48",
+                        "on-tertiary": "#d2ffc4",
+                        "secondary-dim": "#6b4900",
+                        "on-error-container": "#570008",
+                        "surface-tint": "#a63400",
+                        "inverse-primary": "#f16530",
+                        "surface-variant": "#ffd3ce",
+                        "on-error": "#ffefee",
+                        "secondary-fixed-dim": "#ffb623",
+                        "surface-container-low": "#ffedeb",
+                        "primary-fixed": "#ff7948",
+                        "on-tertiary-container": "#2d5a27",
+                        "error-dim": "#9f0519",
+                        "secondary-container": "#ffc96f",
+                        "on-secondary-fixed-variant": "#6c4a00",
+                        "tertiary-fixed-dim": "#abdf9e",
+                        "on-secondary-container": "#614100",
+                        "surface-container-high": "#ffdad6",
+                        "surface-dim": "#ffc7c2",
+                        "on-primary-fixed-variant": "#551700",
+                        "on-primary-fixed": "#000000",
+                        "on-tertiary-fixed": "#1a4716",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffefeb",
+                        "tertiary-fixed": "#b9eeab",
+                        "primary-fixed-dim": "#f46732",
+                        "tertiary-container": "#b9eeab",
+                        "error-container": "#fb5151"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #fff4f3;
+        }
+        .editorial-shadow {
+            box-shadow: 0 40px 80px -20px rgba(78, 33, 30, 0.08);
+        }
+        .glass-card {
+            background: rgba(255, 244, 243, 0.7);
+            backdrop-filter: blur(24px);
+        }
+        .card-stack-item {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased overflow-x-hidden">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-[#fff4f3]/80 dark:bg-[#1a0f0e]/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black italic text-orange-800 dark:text-orange-300 tracking-tighter">Brasserie</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-orange-800 dark:text-orange-300 font-bold border-b-2 border-orange-700 pb-1" href="#">Discover</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors" href="#">Chefs</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors" href="#">Pantry</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors" href="#">Seasons</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-surface-container-lowest px-4 py-2 rounded-full border-none shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Find a flavor..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-[#ffffff]/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-[#ffffff]/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-white">
+<img class="w-full h-full object-cover" data-alt="User profile chef hat icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdD0c5KDgY6VzbVo2llxCnf77lOIww1XI7jZKkA1dcjH2xULjjfgUFFNf9BEZPs4LzpqB2nitz2_d3WO2bWajVbCH19CD8qwa5I8SzSLTg5KiaPruu_T2XcGToTjtFHZEGThAhrEalIL9LO22-uwbng5T4v3EEOGa7XHMwoShY8-gt-VeYR-A_XbhrVDyVkuUokjNHMaYkiY4XWXEa1nRQpBv7hWfi5hCkWQkzpEW4dqwe0ZfBgvEpHK83B7r3tKO1gZjT4YGdg-w"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation Shell -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full h-screen w-64 bg-[#fff4f3] dark:bg-[#1a0f0e] border-r border-[#e09c96]/15 pt-24 pb-8">
+<div class="px-6 mb-8">
+<p class="text-xl font-bold text-[#4e211e] dark:text-[#ffdad6] font-headline">Chef de Cuisine</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold mt-1">Gold Member</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="bg-gradient-to-r from-orange-700 to-orange-500 text-white rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-headline text-sm tracking-wide uppercase hover:scale-[1.02] transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+            Daily Mix
+        </a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center gap-3 font-headline text-sm tracking-wide uppercase hover:scale-[1.02] transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+            Saved Recipes
+        </a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center gap-3 font-headline text-sm tracking-wide uppercase hover:scale-[1.02] transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+            Meal Planner
+        </a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center gap-3 font-headline text-sm tracking-wide uppercase hover:scale-[1.02] transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+            Grocery List
+        </a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center gap-3 font-headline text-sm tracking-wide uppercase hover:scale-[1.02] transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+            Settings
+        </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-4 bg-primary text-on-primary rounded-full font-headline text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:bg-primary-dim transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+            Post a Recipe
+        </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-64 pt-24 min-h-screen flex flex-col items-center justify-center p-4 relative">
+<!-- Recipe Discovery Card Container -->
+<div class="w-full max-w-md relative z-10 flex flex-col items-center">
+<!-- Stack Effect (Visual Multi-card Deck) -->
+<!-- Third Card -->
+<div class="absolute top-8 left-12 w-full aspect-[4/5] bg-surface-container rounded-xl opacity-40 translate-y-2 rotate-6 shadow-sm z-0"></div>
+<!-- Second Card -->
+<div class="absolute top-4 left-6 w-full aspect-[4/5] bg-surface-container-high rounded-xl opacity-70 translate-y-1 rotate-3 shadow-md z-10"></div>
+<!-- Swipe Hints (Improved Visibility) -->
+<div class="absolute -left-20 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-5xl text-error-dim animate-pulse">chevron_left</span>
+<span class="text-xs font-black uppercase tracking-[0.2em] text-error-dim [writing-mode:vertical-lr] rotate-180 font-headline">Dismiss</span>
+</div>
+<div class="absolute -right-20 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-5xl text-tertiary-dim animate-pulse">chevron_right</span>
+<span class="text-xs font-black uppercase tracking-[0.2em] text-tertiary-dim [writing-mode:vertical-lr] font-headline">Keep</span>
+</div>
+<!-- Main Swipe Card -->
+<div class="relative w-full aspect-[4/5] bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow group z-20 cursor-grab active:cursor-grabbing">
+<!-- Recipe Image -->
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close up of spicy garlic shrimp pasta with chili flakes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6hvk7eJ5fjMQHnfigogNV02ywq8ynvxk3kO7JvvU-SN1TU5Q0kCtIXcJewZFGwpWJp7lbT60JS6P5sFUpQ_2KXO1Q_Oexi0irrzkAOOeDneLP10-aCdEBD9NfODPrenvGNqBOZq0RG7_OIymGNJKRyFFd_Q8SK6e9udBbG2fKQbQK-2Xe_D2YGdpVT3t-5Ak_QqLkb8d7FXEqx_F6-1dIA_Wmssh3KbZFk6W1gEVmNqQITMNv5jbMBqZysjvZChkKDC297vUpLNQ"/>
+<!-- Editorial Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#4e211e]/90 via-transparent to-transparent"></div>
+<!-- Swipe to explore instruction (Overlay) -->
+<div class="absolute top-6 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="px-4 py-2 bg-black/40 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">swipe</span>
+                    Swipe to explore
+                </div>
+</div>
+<!-- Recipe Content Overlay -->
+<div class="absolute bottom-0 left-0 p-8 w-full text-white">
+<div class="flex gap-2 mb-3">
+<span class="px-3 py-1 bg-tertiary/90 text-[10px] font-bold uppercase tracking-tighter rounded-full text-on-tertiary">Fresh Catch</span>
+<span class="px-3 py-1 bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-tighter rounded-full">15 Mins</span>
+</div>
+<h1 class="font-headline text-4xl font-extrabold leading-tight mb-2 tracking-tight">Spicy Garlic Shrimp Pasta</h1>
+<p class="font-body text-white/80 text-sm leading-relaxed max-w-xs">
+                    Al dente pasta tossed in a zesty garlic and chili sauce with succulent shrimp.
+                </p>
+</div>
+<!-- Interaction Tags -->
+<div class="absolute top-6 right-6 flex flex-col gap-2">
+<div class="w-12 h-12 glass-card rounded-full flex items-center justify-center text-primary-dim shadow-sm">
+<span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-center gap-8 mt-10 z-30">
+<!-- Dislike -->
+<button class="w-16 h-16 rounded-full bg-surface-container-lowest text-error flex items-center justify-center editorial-shadow transition-all hover:scale-110 active:scale-90 border-4 border-surface-container">
+<span class="material-symbols-outlined text-4xl" data-icon="close">close</span>
+</button>
+<!-- Save/Star -->
+<button class="w-14 h-14 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center editorial-shadow transition-all hover:scale-110 active:scale-90">
+<span class="material-symbols-outlined text-3xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<!-- Like/Heart -->
+<button class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary flex items-center justify-center editorial-shadow transition-all hover:scale-110 active:scale-90 shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined text-5xl" data-icon="favorite" data-weight="fill" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full flex flex-col md:flex-row justify-between items-center gap-4 mt-20 py-12 px-6 bg-[#ffe2de] dark:bg-[#2d1614] z-0">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-headline font-bold tracking-tight text-[#4e211e] text-lg">Brasserie Editorial</span>
+<p class="font-body text-sm font-light text-[#834c48]/70 mt-1">© 2024 The Digital Brasserie Editorial. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-body text-sm font-light text-[#834c48]/70 hover:text-orange-700 transition-opacity" href="#">Privacy Policy</a>
+<a class="font-body text-sm font-light text-[#834c48]/70 hover:text-orange-700 transition-opacity" href="#">Terms of Service</a>
+<a class="font-body text-sm font-light text-[#834c48]/70 hover:text-orange-700 transition-opacity underline decoration-orange-500" href="#">Contact Us</a>
+<a class="font-body text-sm font-light text-[#834c48]/70 hover:text-orange-700 transition-opacity" href="#">Careers</a>
+</div>
+</footer>
+</main>
+<!-- Mobile Bottom Navigation Shell -->
+<div class="md:hidden fixed bottom-0 w-full bg-[#fff4f3]/95 backdrop-blur-xl flex justify-around py-4 z-50 rounded-t-3xl shadow-2xl">
+<button class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" data-icon="explore" data-weight="fill" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] font-bold uppercase mt-1">Discover</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="text-[10px] font-bold uppercase mt-1">Saves</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span class="text-[10px] font-bold uppercase mt-1">Planner</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="text-[10px] font-bold uppercase mt-1">Chef</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chef Profile | Brasserie</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .beVietnamPro { font-family: 'Be Vietnam Pro', sans-serif; }
+        
+        /* Custom scrollbar for clean editorial look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e09c96; border-radius: 10px; }
+
+        /* Custom animation for the remix carousel */
+        .remix-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .remix-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-variant": "#ffd3ce",
+                "surface-container-high": "#ffdad6",
+                "surface-bright": "#fff4f3",
+                "on-secondary-container": "#614100",
+                "outline": "#a36762",
+                "background": "#fff4f3",
+                "on-tertiary-fixed-variant": "#376430",
+                "surface-dim": "#ffc7c2",
+                "on-primary-container": "#451100",
+                "secondary": "#7b5400",
+                "on-primary-fixed": "#000000",
+                "tertiary-fixed-dim": "#abdf9e",
+                "surface-container": "#ffe2de",
+                "on-secondary-fixed": "#483000",
+                "surface-container-highest": "#ffd3ce",
+                "on-error-container": "#570008",
+                "error": "#b31b25",
+                "on-error": "#ffefee",
+                "on-tertiary-container": "#2d5a27",
+                "tertiary-fixed": "#b9eeab",
+                "primary": "#a63400",
+                "inverse-on-surface": "#ce8c86",
+                "tertiary-container": "#b9eeab",
+                "surface-tint": "#a63400",
+                "error-dim": "#9f0519",
+                "primary-fixed": "#ff7948",
+                "tertiary-dim": "#2d5927",
+                "on-surface-variant": "#834c48",
+                "primary-fixed-dim": "#f46732",
+                "inverse-surface": "#240303",
+                "inverse-primary": "#f16530",
+                "tertiary": "#386631",
+                "surface": "#fff4f3",
+                "secondary-fixed-dim": "#ffb623",
+                "on-primary-fixed-variant": "#551700",
+                "surface-container-low": "#ffedeb",
+                "surface-container-lowest": "#ffffff",
+                "secondary-dim": "#6b4900",
+                "on-background": "#4e211e",
+                "outline-variant": "#e09c96",
+                "on-secondary": "#fff1df",
+                "secondary-fixed": "#ffc96f",
+                "on-secondary-fixed-variant": "#6c4a00",
+                "primary-dim": "#912d00",
+                "on-tertiary": "#d2ffc4",
+                "error-container": "#fb5151",
+                "primary-container": "#ff7948",
+                "on-surface": "#4e211e",
+                "secondary-container": "#ffc96f",
+                "on-tertiary-fixed": "#1a4716",
+                "on-primary": "#ffefeb"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Be Vietnam Pro"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fff4f3]/80 dark:bg-[#1a0f0e]/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black italic text-orange-800 dark:text-orange-300 tracking-tighter plusJakartaSans">
+                Brasserie
+            </div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors plusJakartaSans text-sm font-bold uppercase tracking-widest" href="#">Discover</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors plusJakartaSans text-sm font-bold uppercase tracking-widest" href="#">Chefs</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors plusJakartaSans text-sm font-bold uppercase tracking-widest" href="#">Pantry</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] hover:text-orange-700 transition-colors plusJakartaSans text-sm font-bold uppercase tracking-widest" href="#">Seasons</a>
+</nav>
+<div class="flex items-center space-x-5">
+<button class="p-2 hover:bg-[#ffffff]/50 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-[#ffffff]/50 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined text-on-surface-variant">shopping_bag</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary ring-4 ring-surface-container">
+<img alt="User profile chef hat icon" class="w-full h-full object-cover" data-alt="Close up of professional chef in white uniform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF6TbqJyikQ2S5O-Dl3UZ44kADvKnM3tD_g4PdGk8Zdd5psJdr02opUXGNpL34jxEStnTu6P5--m1xBDKogJ_oF-gkXAIXdWUnctuN5n34eYGJAXobUpnix1sB2BbgKzHr12PgPjbxaqH0x9aUIJEW5eJMC9lwrBQVDT1QiWjo-dwk2v_GqzrJSs7cQ_ddBEpaWDS6a8G1CWkinRpor1v66OGWaD-Zin9guKPOIjEP5Q5ot3YdRRytWmDnfTJ7oH7dag8gq54Y5FA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Hidden on mobile) -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r border-[#e09c96]/15 bg-[#fff4f3] dark:bg-[#1a0f0e] pt-24 z-40">
+<div class="px-6 mb-8">
+<h2 class="text-xl font-bold text-[#4e211e] dark:text-[#ffdad6] plusJakartaSans">Chef de Cuisine</h2>
+<p class="text-xs font-bold tracking-wide uppercase text-orange-700 dark:text-orange-400">Gold Member</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center space-x-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="plusJakartaSans font-bold text-sm tracking-wide uppercase">Daily Mix</span>
+</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center space-x-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="plusJakartaSans font-bold text-sm tracking-wide uppercase">Saved Recipes</span>
+</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center space-x-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="plusJakartaSans font-bold text-sm tracking-wide uppercase">Meal Planner</span>
+</a>
+<a class="text-[#834c48] dark:text-[#d19e9a] px-4 py-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full mx-2 flex items-center space-x-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="plusJakartaSans font-bold text-sm tracking-wide uppercase">Grocery List</span>
+</a>
+<a class="bg-gradient-to-r from-orange-700 to-orange-500 text-white rounded-full mx-2 my-1 px-4 py-3 flex items-center space-x-3 transition-transform hover:scale-[1.02] shadow-lg shadow-orange-700/20" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="plusJakartaSans font-bold text-sm tracking-wide uppercase">Settings</span>
+</a>
+</nav>
+<div class="p-4">
+<button class="w-full bg-surface-container-highest text-primary font-bold py-4 rounded-full plusJakartaSans text-xs tracking-widest uppercase hover:bg-surface-variant transition-colors">
+                Post a Recipe
+            </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 min-h-screen">
+<div class="max-w-7xl mx-auto px-6 pb-20">
+<!-- Profile Hero Section -->
+<section class="relative mt-8 mb-16 overflow-hidden">
+<div class="bg-surface-container-low rounded-xl p-8 md:p-12 flex flex-col md:flex-row items-center md:items-end gap-8 relative overflow-hidden">
+<!-- Decor Pattern -->
+<div class="absolute -top-12 -right-12 w-64 h-64 bg-surface-container-highest rounded-full blur-3xl opacity-50"></div>
+<!-- Profile Photo with Overlap -->
+<div class="relative group">
+<div class="w-48 h-48 md:w-56 md:h-56 rounded-xl overflow-hidden shadow-2xl transition-transform duration-500 group-hover:scale-105">
+<img alt="Chef de Cuisine" class="w-full h-full object-cover" data-alt="Portrait of a smiling chef in a professional kitchen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdAFVM5-EzyVXACCuGrQoTyjipquDMRIEui2ZbflVJI6sq2SHCVL7V4363Bi3SLX3NcprhgkZo2kPV2ZQZ8yMKTDp4heIZzO86I3S_WAm3-3AACkYw0o0_bZxP0kuDfk67JjmfzcTVqmqdLb8SqXL-x3GO9T1n621HFWCUH7pGhvtS1qUFQWHPxIIPHaGLrXl0RG5f98gChcWfsEGW_cDqBeJZJssv6l1cZMzvSDrzWunGyXof87Qs4_ZtgNtlmHCfuLWLELH_nFY"/>
+</div>
+<div class="absolute -bottom-4 -right-4 bg-tertiary text-on-tertiary px-4 py-2 rounded-full flex items-center space-x-2 shadow-lg">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-xs font-bold uppercase tracking-tighter beVietnamPro">Gold Member</span>
+</div>
+</div>
+<!-- Profile Info -->
+<div class="flex-1 text-center md:text-left">
+<h1 class="text-5xl md:text-6xl font-black text-on-surface plusJakartaSans tracking-tighter mb-2 leading-none">
+                            Julian <span class="text-primary">Vane</span>
+</h1>
+<p class="text-lg text-on-surface-variant beVietnamPro mb-6 max-w-lg">
+                            Mastering the art of Provencal slow-cooking and seasonal pairings since 2018.
+                        </p>
+<!-- Stats Grid -->
+<div class="flex flex-wrap justify-center md:justify-start gap-4">
+<div class="bg-white/60 backdrop-blur-md px-6 py-4 rounded-lg border border-outline-variant/10 min-w-[140px]">
+<span class="block text-2xl font-black text-primary plusJakartaSans">124</span>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant beVietnamPro">Recipes Cooked</span>
+</div>
+<div class="bg-white/60 backdrop-blur-md px-6 py-4 rounded-lg border border-outline-variant/10 min-w-[140px]">
+<span class="block text-2xl font-black text-primary plusJakartaSans">48</span>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant beVietnamPro">Saved Recipes</span>
+</div>
+<div class="bg-white/60 backdrop-blur-md px-6 py-4 rounded-lg border border-outline-variant/10 min-w-[140px]">
+<span class="block text-2xl font-black text-primary plusJakartaSans">12</span>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant beVietnamPro">Collections</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Culinary Insights & Habits -->
+<section class="mt-8">
+<div class="mb-12">
+<h2 class="text-4xl font-black text-on-surface plusJakartaSans tracking-tight">Culinary Insights &amp; Habits</h2>
+<p class="text-lg text-on-surface-variant beVietnamPro mt-2">Data-driven analytics of your cooking journey and preferences.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Dietary Balance Card -->
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between shadow-sm border border-outline-variant/10">
+<div>
+<h3 class="text-xl font-bold plusJakartaSans mb-6">Dietary Balance</h3>
+<div class="flex justify-between items-end mb-3">
+<span class="text-xs font-bold uppercase text-tertiary tracking-widest">Vegetarian</span>
+<span class="text-3xl font-black plusJakartaSans text-on-surface">65%</span>
+</div>
+<div class="w-full h-6 bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="h-full bg-tertiary-fixed-dim" style="width: 65%"></div>
+<div class="h-full bg-primary-fixed" style="width: 35%"></div>
+</div>
+<div class="flex justify-between items-start mt-3">
+<span class="text-xs font-bold uppercase text-primary-fixed tracking-widest">Meat</span>
+<span class="text-sm font-bold plusJakartaSans text-on-surface-variant">35%</span>
+</div>
+</div>
+<div class="mt-10 pt-8 border-t border-outline-variant/10">
+<p class="text-md text-on-surface-variant italic leading-relaxed">"You're leaning into plant-forward cuisine this month. Great for sustainability!"</p>
+</div>
+</div>
+<!-- Shopping List Staples -->
+<div class="bg-surface-container-low p-8 rounded-xl shadow-sm border border-outline-variant/10">
+<h3 class="text-xl font-bold plusJakartaSans mb-8">Frequently Bought</h3>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">eco</span>
+</div>
+<span class="font-bold text-lg plusJakartaSans">Extra Virgin Olive Oil</span>
+</div>
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-tighter">12x / mo</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">restaurant</span>
+</div>
+<span class="font-bold text-lg plusJakartaSans">Fresh Basil</span>
+</div>
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-tighter">8x / mo</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">layers</span>
+</div>
+<span class="font-bold text-lg plusJakartaSans">Garlic Bulbs</span>
+</div>
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-tighter">15x / mo</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">grain</span>
+</div>
+<span class="font-bold text-lg plusJakartaSans">Maldon Sea Salt</span>
+</div>
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-tighter">2x / yr</span>
+</div>
+</div>
+</div>
+<!-- Time for a Remix -->
+<div class="bg-surface-container-low p-8 rounded-xl overflow-hidden relative shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold plusJakartaSans">Haven't Cooked Lately</h3>
+<div class="flex space-x-2">
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary transition-colors hover:bg-surface-variant">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary transition-colors hover:bg-surface-variant">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex space-x-6 overflow-x-auto remix-scroll pb-2">
+<!-- Remix Item 1 -->
+<div class="min-w-[240px] group cursor-pointer">
+<div class="h-40 rounded-xl overflow-hidden relative mb-3">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="Close up of a wild mushroom risotto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoUNx-VBjSLoDrU_szPSOnl6uxwR4ITxPkzuQ5VjBehmjKr44oM0oFC1n4Yg3Q7LbIb5mHHiy_9PY4r_ZxsH3Fx_7N7C5421xUjeJLRph0AGL0hYGelbXRaKaMoeLldv2COYue25Fqe6YQvdW-B-ujAItN5-L8HpZhely5jfPJNHFNOfiGwCsSSn9dzodOgXdb6a3VftZ3TEmYqOCbJ47l-jL9-vouB_i1Moh4cvE9UrbsmsspjW1ys784M3I11BrF2vF-tKxtqwE"/>
+<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-[10px] px-3 py-1.5 rounded-full uppercase font-bold">45 Days ago</div>
+</div>
+<h4 class="font-bold text-md plusJakartaSans leading-tight group-hover:text-primary transition-colors">Wild Mushroom Risotto</h4>
+<p class="text-sm text-on-surface-variant beVietnamPro mt-1">Saved from Chef Anna</p>
+</div>
+<!-- Remix Item 2 -->
+<div class="min-w-[240px] group cursor-pointer">
+<div class="h-40 rounded-xl overflow-hidden relative mb-3">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="Grilled sea bass with lemon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxN7KcudpSzJR44dotAwWZmrp8KqlAeBAtWHFDGowFH_Y4NjNU7IOh2H09AZe5JsvAHI2uGOYaCkdLMtrD-qeh8Ek-Gbxqt2PdghMI1alcJkzDyXHjzc7PcMLm5H4-bubUlIA8CG15HyO47emu1kr_oqm23CSGIJoCQLRbI1EPveSw2zldMGbAWtsu0v4zQEX25LFDxOUsyRYMDj9gLFOZhSn1lHlOhlFtR9ohvyGHsk88PcttGidjTvx0UWwCfme5xbpSaeribos"/>
+<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-[10px] px-3 py-1.5 rounded-full uppercase font-bold">32 Days ago</div>
+</div>
+<h4 class="font-bold text-md plusJakartaSans leading-tight group-hover:text-primary transition-colors">Lemon Herb Sea Bass</h4>
+<p class="text-sm text-on-surface-variant beVietnamPro mt-1">Mastered Recipe</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-6 bg-[#ffe2de] dark:bg-[#2d1614] lg:ml-64 lg:w-[calc(100%-16rem)]">
+<div class="w-full flex flex-col md:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
+<div class="text-left">
+<div class="font-bold tracking-tight text-[#4e211e] plusJakartaSans text-xl mb-2">Brasserie</div>
+<p class="beVietnamPro text-sm font-light text-[#834c48]/70 max-w-xs">
+                    Curating the finest digital culinary experiences for the modern chef.
+                </p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Privacy Policy</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Terms of Service</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Contact Us</a>
+<a class="text-[#834c48]/70 hover:text-orange-700 beVietnamPro text-sm font-light transition-opacity duration-300" href="#">Careers</a>
+</div>
+<div class="text-sm font-light text-[#834c48]/70 beVietnamPro">
+                © 2024 The Digital Brasserie Editorial.
+            </div>
+</div>
+</footer>
+<!-- Mobile Bottom NavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-outline-variant/20 px-4 py-3 flex justify-around items-center z-50">
+<button class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[10px] font-bold uppercase mt-1">Profile</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold uppercase mt-1">Discover</span>
+</button>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-bold uppercase mt-1">Saved</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-bold uppercase mt-1">More</span>
+</button>
+</nav>
+</body></html>

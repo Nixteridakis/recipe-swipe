@@ -10,7 +10,7 @@ todos:
     status: completed
   - id: shopping-list-generation
     content: Aggregate selected recipe ingredients with sane unit handling and category grouping
-    status: pending
+    status: completed
   - id: bring-integration
     content: Integrate Bring! push flow (API/direct if possible, fallback export/share flow)
     status: pending
@@ -26,26 +26,38 @@ todos:
   - id: css-swipe-discover
     content: Explore replacing Swiper in discover UX with a CSS-only swipe/scroll solution (no external carousel lib)
     status: pending
+  - id: discover-reaction-buttons
+    content: Fix Discover action row (dismiss / like / open recipe)—align cues, button behavior, cart updates, and a11y labels
+    status: pending
+  - id: import-page-demo-gif
+    content: Record and add a short loopable GIF demo of the Import page flow (URL/text → parse → save)
+    status: pending
 ---
 
 ## Progress
 
-Completed foundation:
-
-- [x] Next.js setup
-- [x] Sanity setup + schemas + client/queries
-- [x] Base recipe pages
-- [x] CSS architecture baseline
-
-Current focus:
+Completed:
 
 - [x] ~~varlock-now~~
 - [x] ~~recipe-selection-flow~~
-- [ ] shopping-list-generation
+- [x] ~~shopping-list-generation~~
+
+Pending:
+
 - [ ] bring-integration
 - [ ] ui-system-decision
 - [ ] ui-final-pass
 - [ ] netlify-production
+- [ ] css-swipe-discover
+- [ ] discover-reaction-buttons
+- [ ] import-page-demo-gif
+
+## Baseline in Place
+
+- Next.js setup
+- Sanity setup + schemas + client/queries
+- Base recipe pages
+- CSS architecture baseline
 
 ## General Guidelines (Lean + Practical)
 
@@ -59,14 +71,20 @@ Current focus:
 
 ## Immediate Next Step
 
-1. ~~Implement VarLock now~~ (completed):
-   - ~~Add `.env.schema`~~
-   - ~~Update scripts to run dev/build with VarLock~~
-   - ~~Verify `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` resolution locally~~
-   - ~~Define Netlify env strategy (VarLock in CI vs Netlify UI env vars)~~
+- Complete `import-page-demo-gif`:
+  - Record the main happy path on `/import` at a fixed viewport; trim to a tight loop; optimize file size.
+  - Add or link the asset (README, docs, or external URL—avoid huge binaries in git if needed).
+  - Sanity-check: loop reads clearly at a glance.
 
-2. Implement shopping-list-generation:
-   - Aggregate ingredients across selected recipes by ingredient identity
-   - Normalize units and sum quantities where compatible
-   - Group final list by grocery category
-   - Validate with at least 3 recipes containing overlapping ingredients
+Then: `bring-integration` (Bring! path vs fallback, push/export from cart, real list verification).
+
+## discover-reaction-buttons (implementation notes)
+
+- **Goal:** One clear mental model: dismiss (skip without cart), like/save (add to cart + advance), open (detail without changing stack—or define explicitly).
+- **Current gaps:** Left cue says “Dismiss” but the control goes to the *previous* card; middle star advances + adds to cart while `aria-label` says “Next recipe”; heart opens the recipe and also adds to cart—decide whether open should add to cart or only the middle action should.
+- **Verify:** Keyboard + screen reader labels match visible cues; tap each action and confirm cart + stack behavior matches copy.
+
+## import-page-demo-gif (notes)
+
+- Capture the main happy path on `/import` at a consistent viewport; trim to a tight loop; keep file size reasonable (palette reduction / fps).
+- Decide placement: e.g. `README`, project docs, or Sanity/marketing—link the asset rather than bloating the repo if it gets large.

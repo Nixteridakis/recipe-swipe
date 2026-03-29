@@ -685,7 +685,10 @@ sendBtn.addEventListener("click", async () => {
 
     const parsedData = await parseRes.json().catch(() => ({}));
     if (!parseRes.ok) {
-      showMessage(parsedData?.error || `Error ${parseRes.status}`, "error");
+      showMessage(
+        parsedData?.message || parsedData?.error || `Error ${parseRes.status}`,
+        "error"
+      );
       sendBtn.disabled = false;
       return;
     }
@@ -708,7 +711,10 @@ sendBtn.addEventListener("click", async () => {
 
     const createData = await createRes.json().catch(() => ({}));
     if (!createRes.ok) {
-      showMessage(createData?.error || `Error ${createRes.status}`, "error");
+      showMessage(
+        createData?.message || createData?.error || `Error ${createRes.status}`,
+        "error"
+      );
       sendBtn.disabled = false;
       return;
     }
