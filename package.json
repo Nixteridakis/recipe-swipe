@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "varlock run -- next dev --webpack",
-    "build": "varlock run -- next build",
+    "build": "varlock run -- sh -c \"next build && EXTENSION_ZIP_MODE=production pnpm run zip:extension\"",
     "start": "varlock run -- next start",
     "lint": "eslint",
-    "env:check": "varlock load"
+    "env:check": "varlock load",
+    "zip:extension": "node scripts/generate-extension-api-base.mjs && mkdir -p public/downloads && cd chrome-extension && zip -r ../public/downloads/brasserie-recipe-importer.zip . -x '*.DS_Store'"
   },
   "overrides": {
     "next": {

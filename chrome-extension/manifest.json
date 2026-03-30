@@ -3,7 +3,7 @@
   "name": "Recipe Book Importer",
   "version": "1.0.0",
   "description": "Extract JSON-LD Recipe from the current page and send to Recipe Book",
-  "permissions": ["activeTab", "scripting", "storage"],
+  "permissions": ["activeTab", "scripting"],
   "host_permissions": ["http://localhost:3000/*", "https://*/"],
   "action": {
     "default_popup": "popup.html"
