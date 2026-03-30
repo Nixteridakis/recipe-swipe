@@ -14,6 +14,9 @@ type ParsedIngredient = {
   unit?: string | null;
 };
 
+/** Served from /public — `pnpm run zip:extension` (local) or `pnpm run build` (production URL in zip). */
+const EXTENSION_ZIP_HREF = "/downloads/brasserie-recipe-importer.zip";
+
 type ParsedRecipe = {
   sourceUrl: string;
   title?: string;
@@ -190,83 +193,11 @@ export default function ImportRecipePage() {
         </p>
       </header>
 
-      <section className={styles.extensionCard} aria-labelledby="import-ext-heading">
-        <div className={styles.extensionGrid}>
-          <div className={styles.extensionCopy}>
-            <div className={styles.stepHead}>
-              <span className={styles.stepBadge} aria-hidden>
-                1
-              </span>
-              <span className={styles.stepKickerPrimary}>The best way</span>
-            </div>
-            <h2 id="import-ext-heading" className={styles.cardTitleLg}>
-              Use the Brasserie importer extension
-            </h2>
-            <ul className={styles.extensionList}>
-              <li className={styles.extensionListItem}>
-                <span className={styles.extensionIconWrap}>
-                  <AppIcon name="plus" className={styles.extensionIcon} />
-                </span>
-                <div>
-                  <p className={styles.extensionItemTitle}>Load it in Chrome</p>
-                  <p className={styles.extensionItemText}>
-                    Open <code className={styles.inlineCode}>chrome://extensions</code>, enable{" "}
-                    <strong>Developer mode</strong>, then <strong>Load unpacked</strong> and select
-                    the <code className={styles.inlineCode}>chrome-extension/</code> folder from
-                    this project.
-                  </p>
-                </div>
-              </li>
-              <li className={styles.extensionListItem}>
-                <span className={styles.extensionIconWrap}>
-                  <AppIcon name="sparkles" className={styles.extensionIcon} />
-                </span>
-                <div>
-                  <p className={styles.extensionItemTitle}>Pin &amp; connect</p>
-                  <p className={styles.extensionItemText}>
-                    Pin the extension, set <strong>Recipe Book API</strong> to your app URL (e.g.{" "}
-                    <code className={styles.inlineCode}>http://localhost:3000</code>), then open
-                    any recipe page.
-                  </p>
-                </div>
-              </li>
-              <li className={styles.extensionListItem}>
-                <span className={styles.extensionIconWrap}>
-                  <AppIcon name="chef-hat" className={styles.extensionIcon} />
-                </span>
-                <div>
-                  <p className={styles.extensionItemTitle}>Extract or send</p>
-                  <p className={styles.extensionItemText}>
-                    Click the extension, use <strong>Extract recipe</strong>, then{" "}
-                    <strong>Send to Recipe Book</strong>—it posts JSON-LD to{" "}
-                    <code className={styles.inlineCode}>/api/parse-recipe</code> without 403 issues.
-                  </p>
-                </div>
-              </li>
-            </ul>
-            <p className={styles.extensionFootnote}>
-              Full steps: see <code className={styles.inlineCode}>chrome-extension/README.md</code>{" "}
-              in the repo.
-            </p>
-          </div>
-
-          <div className={styles.extensionVisual}>
-            <div className={styles.extensionGlow} aria-hidden />
-            <div className={styles.extensionMock}>
-              <div className={styles.extensionMockInner}>
-                <AppIcon name="sparkles" className={styles.extensionMockIcon} />
-                <p className={styles.extensionMockLabel}>Recipe JSON-LD from the open tab</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <form className={styles.importGrid} onSubmit={onSubmit}>
         <section className={styles.urlCard}>
           <div className={styles.stepHead}>
             <span className={styles.stepBadge} aria-hidden>
-              2
+              1
             </span>
             <span className={styles.stepKickerPrimary}>Quick &amp; simple</span>
           </div>
@@ -313,9 +244,9 @@ export default function ImportRecipePage() {
         <section className={styles.htmlCard}>
           <div className={styles.stepHead}>
             <span className={`${styles.stepBadge} ${styles.stepBadgeMuted}`} aria-hidden>
-              3
+              2
             </span>
-            <span className={styles.stepKickerMuted}>Technical fallback</span>
+            <span className={styles.stepKickerMuted}>The geeky way</span>
           </div>
           <h2 className={styles.cardTitleSm}>Paste source code</h2>
           <p className={styles.cardSub}>
@@ -354,6 +285,95 @@ export default function ImportRecipePage() {
           </div>
         </section>
       </form>
+
+      <section className={styles.extensionCard} aria-labelledby="import-ext-heading">
+        <div className={styles.extensionGrid}>
+          <div className={styles.extensionCopy}>
+            <div className={styles.stepHead}>
+              <span className={styles.stepBadge} aria-hidden>
+                3
+              </span>
+              <span className={styles.stepKickerPrimary}>Extension import</span>
+            </div>
+            <h2 id="import-ext-heading" className={styles.cardTitleLg}>
+              Use the Brasserie importer extension
+            </h2>
+            <div className={styles.extensionDownload}>
+              <a
+                href={EXTENSION_ZIP_HREF}
+                download="brasserie-recipe-importer.zip"
+                className={styles.downloadButton}
+              >
+                <AppIcon name="list" className={styles.downloadButtonIcon} aria-hidden />
+                Download extension (.zip)
+              </a>
+              <p className={styles.downloadHint}>
+                Unzip the folder, then use <strong>Load unpacked</strong> and pick that folder (the
+                one containing <code className={styles.inlineCode}>manifest.json</code>).
+              </p>
+            </div>
+            <ul className={styles.extensionList}>
+              <li className={styles.extensionListItem}>
+                <span className={styles.extensionIconWrap}>
+                  <AppIcon name="plus" className={styles.extensionIcon} />
+                </span>
+                <div>
+                  <p className={styles.extensionItemTitle}>Load it in Chrome</p>
+                  <p className={styles.extensionItemText}>
+                    Open <code className={styles.inlineCode}>chrome://extensions</code>, enable{" "}
+                    <strong>Developer mode</strong>, then <strong>Load unpacked</strong> and choose
+                    the unzipped extension folder (or your local{" "}
+                    <code className={styles.inlineCode}>chrome-extension/</code> clone).
+                  </p>
+                </div>
+              </li>
+              <li className={styles.extensionListItem}>
+                <span className={styles.extensionIconWrap}>
+                  <AppIcon name="sparkles" className={styles.extensionIcon} />
+                </span>
+                <div>
+                  <p className={styles.extensionItemTitle}>Pin &amp; use</p>
+                  <p className={styles.extensionItemText}>
+                    Pin the extension for quick access. The API URL is baked into the zip:{" "}
+                    <code className={styles.inlineCode}>pnpm run zip:extension</code> uses{" "}
+                    <code className={styles.inlineCode}>NEXT_LOCAL_APP_URL</code> (localhost by
+                    default); <code className={styles.inlineCode}>pnpm run build</code> bakes{" "}
+                    <code className={styles.inlineCode}>NEXT_PUBLIC_APP_URL</code>.
+                  </p>
+                </div>
+              </li>
+              <li className={styles.extensionListItem}>
+                <span className={styles.extensionIconWrap}>
+                  <AppIcon name="chef-hat" className={styles.extensionIcon} />
+                </span>
+                <div>
+                  <p className={styles.extensionItemTitle}>Import</p>
+                  <p className={styles.extensionItemText}>
+                    On a recipe page, click <strong>Import to Recipe Book</strong>—it extracts JSON-LD,
+                    normalizes via <code className={styles.inlineCode}>/api/parse-recipe</code>, then
+                    saves with <code className={styles.inlineCode}>/api/create-recipe</code> (no
+                    manual API setup).
+                  </p>
+                </div>
+              </li>
+            </ul>
+            <p className={styles.extensionFootnote}>
+              Full steps: see <code className={styles.inlineCode}>chrome-extension/README.md</code>{" "}
+              in the repo.
+            </p>
+          </div>
+
+          <div className={styles.extensionVisual}>
+            <div className={styles.extensionGlow} aria-hidden />
+            <div className={styles.extensionMock}>
+              <div className={styles.extensionMockInner}>
+                <AppIcon name="sparkles" className={styles.extensionMockIcon} />
+                <p className={styles.extensionMockLabel}>Recipe JSON-LD from the open tab</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {error ? <div className={styles.errorBox}>{error}</div> : null}
 

@@ -1,12 +1,17 @@
-const apiBaseInput = document.getElementById("apiBase");
-const extractBtn = document.getElementById("extract");
+const importBtn = document.getElementById("import");
 const copyBtn = document.getElementById("copy");
-const sendBtn = document.getElementById("send");
 const debugBtn = document.getElementById("debug");
 const messageEl = document.getElementById("message");
 const metaEl = document.getElementById("meta");
 
-const STORAGE_KEY = "recipe-book-api-base";
+/** From api-base.js — baked at zip:extension from NEXT_PUBLIC_APP_URL */
+function getApiBase() {
+  const raw =
+    typeof RECIPE_BOOK_API_BASE !== "undefined" && RECIPE_BOOK_API_BASE
+      ? RECIPE_BOOK_API_BASE
+      : "http://localhost:3000";
+  return String(raw).replace(/\/$/, "");
+}
 
 function showMessage(text, type = "") {
   messageEl.textContent = text;
@@ -17,19 +22,6 @@ function showMessage(text, type = "") {
 function showMeta(text) {
   metaEl.textContent = text;
 }
-
-// Restore API base URL
-chrome.storage.local.get([STORAGE_KEY], (result) => {
-  if (result[STORAGE_KEY]) apiBaseInput.value = result[STORAGE_KEY];
-  else apiBaseInput.value = "http://localhost:3000";
-});
-
-// Persist API base on change
-apiBaseInput.addEventListener("change", () => {
-  chrome.storage.local.set({
-    [STORAGE_KEY]: apiBaseInput.value.trim() || "http://localhost:3000",
-  });
-});
 
 /** Injected into the page to extract JSON-LD Recipe */
 function getExtractScript() {
@@ -583,11 +575,72 @@ function getDebugConsoleScript() {
 
 let lastResult = null;
 
-extractBtn.addEventListener("click", async () => {
+async function sendToRecipeBook() {
+  if (!lastResult?.recipe || !lastResult?.url) return;
+  const base = getApiBase();
+  const parseUrl = `${base}/api/parse-recipe`;
+  const createUrl = `${base}/api/create-recipe`;
+
+  try {
+  const parseRes = await fetch(parseUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      url: lastResult.url,
+      recipe: lastResult.recipe,
+    }),
+  });
+
+  const parsedData = await parseRes.json().catch(() => ({}));
+  if (!parseRes.ok) {
+    showMessage(
+      parsedData?.message || parsedData?.error || `Error ${parseRes.status}`,
+      "error"
+    );
+    return;
+  }
+
+  const recipe = parsedData?.recipe;
+  if (!recipe) {
+    showMessage("Parse succeeded but no recipe payload returned.", "error");
+    return;
+  }
+
+  const createRes = await fetch(createUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      url: lastResult.url,
+      recipe,
+    }),
+  });
+
+  const createData = await createRes.json().catch(() => ({}));
+  if (!createRes.ok) {
+    showMessage(
+      createData?.message || createData?.error || `Error ${createRes.status}`,
+      "error"
+    );
+    return;
+  }
+
+  const updated = createData?.updated === true;
+  showMessage(
+    updated ? "Recipe updated in Studio." : "Saved to Studio. Open /studio to edit.",
+    "success"
+  );
+  } catch {
+    showMessage(
+      "Request failed. Is the app running at " + base + "? Rebuild the extension with NEXT_PUBLIC_APP_URL if needed.",
+      "error"
+    );
+  }
+}
+
+importBtn.addEventListener("click", async () => {
   showMessage("");
   showMeta("");
   copyBtn.disabled = true;
-  sendBtn.disabled = true;
   lastResult = null;
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -596,6 +649,9 @@ extractBtn.addEventListener("click", async () => {
     return;
   }
 
+  importBtn.disabled = true;
+  showMessage("Reading recipe…");
+
   try {
     const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -603,7 +659,6 @@ extractBtn.addEventListener("click", async () => {
     });
     const value = results?.[0]?.result;
     if (!value?.recipe) {
-      // Run debug script and show why extraction failed
       try {
         const debugResults = await chrome.scripting.executeScript({
           target: { tabId: tab.id },
@@ -621,11 +676,13 @@ extractBtn.addEventListener("click", async () => {
     }
     lastResult = value;
     copyBtn.disabled = false;
-    sendBtn.disabled = false;
     showMeta(value.recipe.name || "Recipe extracted.");
-    showMessage("Recipe extracted. Copy or send to Recipe Book.", "success");
+    showMessage("Saving to Recipe Book…");
+    await sendToRecipeBook();
   } catch {
     showMessage("Cannot read this page (e.g. chrome:// or extension page).", "error");
+  } finally {
+    importBtn.disabled = false;
   }
 });
 
@@ -665,69 +722,3 @@ debugBtn.addEventListener("click", async () => {
   }
 });
 
-sendBtn.addEventListener("click", async () => {
-  if (!lastResult?.recipe || !lastResult?.url) return;
-  const base = (apiBaseInput.value || "http://localhost:3000").replace(/\/$/, "");
-  const parseUrl = `${base}/api/parse-recipe`;
-  const createUrl = `${base}/api/create-recipe`;
-  sendBtn.disabled = true;
-  showMessage("Sending…");
-
-  try {
-    const parseRes = await fetch(parseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        url: lastResult.url,
-        recipe: lastResult.recipe,
-      }),
-    });
-
-    const parsedData = await parseRes.json().catch(() => ({}));
-    if (!parseRes.ok) {
-      showMessage(
-        parsedData?.message || parsedData?.error || `Error ${parseRes.status}`,
-        "error"
-      );
-      sendBtn.disabled = false;
-      return;
-    }
-
-    const recipe = parsedData?.recipe;
-    if (!recipe) {
-      showMessage("Parse succeeded but no `recipe` payload returned.", "error");
-      sendBtn.disabled = false;
-      return;
-    }
-
-    const createRes = await fetch(createUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        url: lastResult.url,
-        recipe,
-      }),
-    });
-
-    const createData = await createRes.json().catch(() => ({}));
-    if (!createRes.ok) {
-      showMessage(
-        createData?.message || createData?.error || `Error ${createRes.status}`,
-        "error"
-      );
-      sendBtn.disabled = false;
-      return;
-    }
-
-    const updated = createData?.updated === true;
-    showMessage(
-      updated ? "Recipe updated in Studio." : "Created in Studio. Open /studio to see it.",
-      "success"
-    );
-    chrome.storage.local.set({ [STORAGE_KEY]: base });
-  } catch {
-    showMessage("Request failed. Is the app running at " + base + "?", "error");
-  } finally {
-    sendBtn.disabled = false;
-  }
-});

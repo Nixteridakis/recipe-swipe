@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
 import { AddToCartButton } from "../AddToCartButton";
 import { AppIcon } from "../AppIcon";
-import type { Category, Recipe } from "./page";
+import type { Category, Recipe } from "../page";
 import styles from "./page.module.css";
 
 type RecipesClientPageProps = {
