@@ -198,26 +198,28 @@ export default async function RecipePage({
                   </span>
                 ) : null}
               </div>
-              {recipe.sourceUrl ? (
-                <a
-                  href={recipe.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.sourceLink}
-                >
-                  <span>Open source</span>
-                  <AppIcon name="arrow-right" className={styles.metaIcon} />
-                </a>
-              ) : null}
-              <AddToCartButton
-                className={styles.quickAddButton}
-                recipe={{
-                  _id: recipe._id,
-                  title: recipe.title,
-                  slug: recipe.slug,
-                  imageRef: recipe.image?.asset?._ref,
-                }}
-              />
+              <div className={styles.heroActions}>
+                {recipe.sourceUrl ? (
+                  <a
+                    href={recipe.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.sourceLink}
+                  >
+                    <span>Open source</span>
+                    <AppIcon name="arrow-right" className={styles.metaIcon} />
+                  </a>
+                ) : null}
+                <AddToCartButton
+                  className={styles.quickAddButton}
+                  recipe={{
+                    _id: recipe._id,
+                    title: recipe.title,
+                    slug: recipe.slug,
+                    imageRef: recipe.image?.asset?._ref,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </header>
@@ -245,14 +247,6 @@ export default async function RecipePage({
               )}
             </section>
 
-            <section className={styles.noteCard}>
-              <span className={styles.noteLabel}>Kitchen Note</span>
-              <p className={styles.noteText}>
-                Use the ingredient list as your mise en place. The layout follows the
-                prototype split: ingredients stay anchored while the method carries the
-                editorial rhythm.
-              </p>
-            </section>
           </aside>
 
           <section className={styles.instructionsColumn}>

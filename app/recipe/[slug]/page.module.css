@@ -88,8 +88,7 @@
 }
 
 .categoryTag,
-.kicker,
-.noteLabel {
+.kicker {
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
@@ -148,9 +147,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 2.9rem;
+  height: 2.85rem;
   padding: 0 1rem;
-  margin-top: var(--space-5);
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.9);
   color: var(--color-text);
@@ -158,12 +156,21 @@
   font-family: var(--font-display);
   font-size: var(--text-xs);
   font-weight: 800;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.heroActions {
+  margin-top: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
 }
 
 .quickAddButton {
-  margin-top: var(--space-3);
+  flex-shrink: 0;
   width: 2.85rem;
   height: 2.85rem;
   display: inline-flex;
@@ -203,7 +210,6 @@
 }
 
 .ingredientsCard,
-.noteCard,
 .instructionsColumn {
   padding: var(--space-6);
   border: 1px solid var(--color-border-soft);
@@ -268,16 +274,6 @@
   color: var(--color-on-tertiary);
 }
 
-.noteCard {
-  background: rgba(255, 201, 111, 0.26);
-}
-
-.noteLabel {
-  background: rgba(123, 84, 0, 0.1);
-  color: var(--color-secondary);
-}
-
-.noteText,
 .emptyCopy {
   margin-top: var(--space-4);
   color: var(--color-text-muted);
@@ -336,9 +332,11 @@
 
 .stepTitle {
   font-size: 1.1rem;
+  margin: 0;
 }
 
 .stepText {
+  margin: 0;
   color: var(--color-text-muted);
   font-size: 1rem;
 }
@@ -409,7 +407,6 @@
 
   .heroCard,
   .ingredientsCard,
-  .noteCard,
   .instructionsColumn {
     padding: var(--space-5);
   }
