@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .editorial-shadow {
+            box-shadow: 0 10px 30px -10px rgba(240, 100, 47, 0.08);
+        }
+        .checked-item {
+            opacity: 0.45;
+            text-decoration: line-through;
+            text-decoration-thickness: 1px;
+        }
+        .composition-ring {
+            background: conic-gradient(
+                #F0642F 0% 60%, 
+                #4E211E 60% 85%, 
+                #d8c2bb 85% 100%
+            );
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-variant": "#f4e0d9",
+                "surface-container-high": "#fbece8",
+                "surface-bright": "#fff8f6",
+                "on-secondary-container": "#4a3c31",
+                "outline": "#85736e",
+                "background": "#fff8f6",
+                "on-tertiary-fixed-variant": "#376430",
+                "surface-dim": "#f4e0d9",
+                "on-primary-container": "#3d1000",
+                "secondary": "#4E211E",
+                "on-primary-fixed": "#000000",
+                "tertiary-fixed-dim": "#abdf9e",
+                "surface-container": "#fdf0ec",
+                "on-secondary-fixed": "#2c1705",
+                "surface-container-highest": "#f4e0d9",
+                "on-error-container": "#410002",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "on-tertiary-container": "#042100",
+                "tertiary-fixed": "#c7f0b8",
+                "primary": "#F0642F",
+                "inverse-on-surface": "#fbeee9",
+                "tertiary-container": "#c7f0b8",
+                "surface-tint": "#F0642F",
+                "error-dim": "#ffb4ab",
+                "primary-fixed": "#ffdbd0",
+                "tertiary-dim": "#accf9f",
+                "on-surface-variant": "#53433f",
+                "primary-fixed-dim": "#ffb59c",
+                "inverse-surface": "#362f2d",
+                "inverse-primary": "#ffb59c",
+                "tertiary": "#51644d",
+                "surface": "#FFF4F3",
+                "secondary-dim": "#e7be9f",
+                "on-background": "#201a18",
+                "outline-variant": "#d8c2bb",
+                "on-secondary": "#ffffff",
+                "secondary-fixed": "#ffdcbe",
+                "on-secondary-fixed-variant": "#5d422d",
+                "primary-dim": "#f0642f",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "primary-container": "#ffdbd0",
+                "on-surface": "#201a18",
+                "secondary-container": "#ffdcbe",
+                "on-tertiary-fixed": "#0e200e",
+                "on-primary": "#ffffff"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Be Vietnam Pro"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/10">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black italic text-primary tracking-tighter">Brasserie</span>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-sm font-bold uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-sm font-bold uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Chefs</a>
+<a class="text-sm font-bold uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Pantry</a>
+<a class="text-sm font-bold uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Seasons</a>
+</nav>
+</div>
+<div class="flex items-center gap-2">
+<div class="hidden sm:flex items-center bg-surface-container px-4 py-2 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs w-32 placeholder-on-surface-variant/40" placeholder="Find ingredients..." type="text"/>
+</div>
+<button class="p-2.5 text-on-surface-variant hover:bg-surface-container rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2.5 text-on-surface-variant hover:bg-surface-container rounded-full transition-all relative">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full"></span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-28 pb-32 px-6 lg:px-12 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="mb-20 grid md:grid-cols-12 items-center gap-12 bg-surface-container-low rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
+<div class="md:col-span-7 relative z-10">
+<span class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">Market List</span>
+<h2 class="font-headline text-5xl md:text-7xl font-black text-on-background mb-6 tracking-tight leading-[0.95]">Culinary <br/>Provisions</h2>
+<div class="flex items-center gap-3 text-on-surface-variant/80 mb-8">
+<span class="material-symbols-outlined text-primary/60" data-icon="local_dining">local_dining</span>
+<p class="font-medium">Sourced for 4 seasonal recipes</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-5 py-2 bg-white/80 backdrop-blur text-on-surface-variant rounded-full text-[11px] font-bold uppercase tracking-widest border border-outline-variant/10">Ratatouille</span>
+<span class="px-5 py-2 bg-white/80 backdrop-blur text-on-surface-variant rounded-full text-[11px] font-bold uppercase tracking-widest border border-outline-variant/10">Garlic Confit</span>
+<span class="px-5 py-2 bg-white/80 backdrop-blur text-on-surface-variant rounded-full text-[11px] font-bold uppercase tracking-widest border border-outline-variant/10">Sourdough</span>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full text-[11px] font-bold uppercase tracking-widest transition-transform hover:scale-105">Add Recipe +</button>
+</div>
+</div>
+<div class="md:col-span-5 relative">
+<div class="aspect-square rounded-[2rem] overflow-hidden shadow-2xl rotate-2 relative group">
+<img alt="Fresh vibrant vegetable selection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsOU7ly650ts-qo225wRFfud5W6OTFMqCW3g6oi5OUdRvsryhFO6vOFYhouGSvcsnzy2V5AesxOcBcBQQZZahPkQZU7hWkrho42b2LBoyY3DGY5JFpy9ilKF7NJtHt90WjefyjZvrBWhFjDCRR1vPeJWEIheY0GUhw43bZO5tSKUmPQzwG9itnh2F-3Dh-e1Oq2ed43vKzXZphDgWIA8cPO_xqEFeyzZnq5jHxDWLNje1EMVirFDTdOFcQ_tehfqDkTTVzHVSZZ5o"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80 mb-1">Weekly Special</p>
+<p class="font-headline font-bold">Provence Harvest</p>
+</div>
+</div>
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-secondary/5 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
+</div>
+</section>
+<!-- Dynamic Multi-Column Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-16">
+<!-- Main Content Area -->
+<div class="xl:col-span-8 space-y-12">
+<!-- Ingredients Section -->
+<section>
+<div class="flex items-baseline justify-between mb-10 border-b border-outline-variant/20 pb-4">
+<div class="flex items-center gap-4">
+<span class="font-headline text-4xl font-black text-on-surface/90">Ingredients</span>
+<span class="text-sm font-bold text-on-surface-variant/50">05 ITEMS</span>
+</div>
+<button class="text-[10px] font-black uppercase tracking-widest text-primary hover:tracking-[0.25em] transition-all">Clear Checked</button>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Item Card 1 -->
+<div class="group flex items-center justify-between p-6 bg-white rounded-2xl editorial-shadow border border-outline-variant/5 transition-all hover:-translate-y-1">
+<div class="flex items-center gap-6">
+<button class="w-8 h-8 rounded-full border-2 border-primary/20 flex items-center justify-center transition-all hover:bg-primary/10 group/check">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/check:opacity-100 text-lg" data-icon="check">check</span>
+</button>
+<div>
+<p class="font-headline font-extrabold text-lg text-on-surface tracking-tight">Heirloom Tomatoes</p>
+<p class="text-sm text-on-surface-variant font-medium">Local Market</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center bg-surface-container rounded-full px-2 py-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-headline font-black text-sm">x4</span>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+</button>
+</div>
+<button class="text-on-surface-variant/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Checked Item -->
+<div class="checked-item flex items-center justify-between p-6 bg-surface-container/30 rounded-2xl border border-transparent">
+<div class="flex items-center gap-6">
+<button class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<div>
+<p class="font-headline font-extrabold text-lg text-on-surface tracking-tight">Fresh Basil</p>
+<p class="text-sm text-on-surface-variant font-medium">Hydroponic</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center bg-surface-container-highest/50 rounded-full px-2 py-1 opacity-50">
+<button class="w-8 h-8 flex items-center justify-center"><span class="material-symbols-outlined text-lg">remove</span></button>
+<span class="w-10 text-center font-headline font-black text-sm">x1</span>
+<button class="w-8 h-8 flex items-center justify-center"><span class="material-symbols-outlined text-lg">add</span></button>
+</div>
+<button class="text-on-surface-variant/30">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="group flex items-center justify-between p-6 bg-white rounded-2xl editorial-shadow border border-outline-variant/5 transition-all hover:-translate-y-1">
+<div class="flex items-center gap-6">
+<button class="w-8 h-8 rounded-full border-2 border-primary/20 flex items-center justify-center transition-all hover:bg-primary/10 group/check">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/check:opacity-100 text-lg" data-icon="check">check</span>
+</button>
+<div>
+<p class="font-headline font-extrabold text-lg text-on-surface tracking-tight">Shallots</p>
+<p class="text-sm text-on-surface-variant font-medium">Traditional</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center bg-surface-container rounded-full px-2 py-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-headline font-black text-sm">x3</span>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+</button>
+</div>
+<button class="text-on-surface-variant/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Item Card 3 (Pantry) -->
+<div class="group flex items-center justify-between p-6 bg-white rounded-2xl editorial-shadow border border-outline-variant/5 transition-all hover:-translate-y-1">
+<div class="flex items-center gap-6">
+<button class="w-8 h-8 rounded-full border-2 border-primary/20 flex items-center justify-center transition-all hover:bg-primary/10 group/check">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/check:opacity-100 text-lg" data-icon="check">check</span>
+</button>
+<div>
+<p class="font-headline font-extrabold text-lg text-on-surface tracking-tight">Extra Virgin Olive Oil</p>
+<p class="text-sm text-on-surface-variant font-medium">Sicily Origin, 500ml</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center bg-surface-container rounded-full px-2 py-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-headline font-black text-sm">x1</span>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+</button>
+</div>
+<button class="text-on-surface-variant/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Item Card 4 (Pantry) -->
+<div class="group flex items-center justify-between p-6 bg-white rounded-2xl editorial-shadow border border-outline-variant/5 transition-all hover:-translate-y-1">
+<div class="flex items-center gap-6">
+<button class="w-8 h-8 rounded-full border-2 border-primary/20 flex items-center justify-center transition-all hover:bg-primary/10 group/check">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover/check:opacity-100 text-lg" data-icon="check">check</span>
+</button>
+<div>
+<p class="font-headline font-extrabold text-lg text-on-surface tracking-tight">Maldon Sea Salt</p>
+<p class="text-sm text-on-surface-variant font-medium">Finishing salt</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center bg-surface-container rounded-full px-2 py-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-headline font-black text-sm">x1</span>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+</button>
+</div>
+<button class="text-on-surface-variant/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar / Details Column -->
+<div class="xl:col-span-4 space-y-8">
+<div class="sticky top-28 space-y-8">
+<!-- Redesigned Summary Card -->
+<div class="bg-white rounded-[2.5rem] p-8 editorial-shadow border border-outline-variant/10 relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline text-lg font-black text-secondary mb-8 uppercase tracking-widest text-center">Cart Insight</h3>
+<div class="space-y-10">
+<!-- Culinary Composition -->
+<div class="flex flex-col items-center">
+<p class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60 mb-6">Culinary Composition</p>
+<div class="relative w-40 h-40 flex items-center justify-center">
+<div class="composition-ring absolute inset-0 rounded-full"></div>
+<div class="absolute inset-2 bg-white rounded-full flex flex-col items-center justify-center text-center p-4">
+<span class="font-headline text-2xl font-black text-primary leading-none">12</span>
+<span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Ingredients</span>
+</div>
+</div>
+<div class="flex justify-center gap-4 mt-6">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-[9px] font-black uppercase tracking-wider">Produce</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[9px] font-black uppercase tracking-wider">Protein</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="text-[9px] font-black uppercase tracking-wider">Pantry</span>
+</div>
+</div>
+</div><!-- 30 Plants a Week Section -->
+<div class="mt-4 pt-4 border-t border-outline-variant/10">
+<p class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60 mb-4 text-center">30 Plants a Week</p>
+<div class="space-y-3">
+<div class="flex justify-between items-end mb-1">
+<span class="text-2xl font-headline font-black text-secondary">12 <span class="text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">/ 30</span></span>
+<span class="text-[10px] font-black text-[#5BA890] uppercase tracking-widest">40% Reached</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-[#5BA890] rounded-full shadow-[0_0_12px_rgba(91,168,144,0.3)]" style="width: 40%"></div>
+</div>
+<p class="text-center text-[10px] font-medium text-on-surface-variant/70 italic">You're 40% of the way to your weekly goal!</p>
+</div>
+</div>
+<!-- Flavor Profile -->
+<!-- Quality Score -->
+<div class="pt-4">
+<button class="w-full py-5 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-[0.25em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] hover:-translate-y-1 active:scale-95">Checkout Items</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Styled Recommended Pantry Items -->
+<div class="px-4">
+<h3 class="font-headline text-xs font-black text-secondary/60 uppercase tracking-[0.4em] mb-8 text-center">Missing Essentials?</h3>
+<div class="space-y-8">
+<div class="flex items-center gap-5 group cursor-pointer">
+<div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-outline-variant/10 shadow-sm transition-all group-hover:scale-110 group-hover:rotate-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="opacity">opacity</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-black text-secondary tracking-tight">White Wine Vinegar</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">Aids Acid Balance</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface border border-outline-variant/20 flex items-center justify-center text-primary transition-all group-hover:bg-primary group-hover:text-white">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div class="flex items-center gap-5 group cursor-pointer">
+<div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-outline-variant/10 shadow-sm transition-all group-hover:scale-110 group-hover:-rotate-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="eco">eco</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-black text-secondary tracking-tight">Fresh Thyme</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">Herbaceous Aroma</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface border border-outline-variant/20 flex items-center justify-center text-primary transition-all group-hover:bg-primary group-hover:text-white">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface/90 backdrop-blur-xl z-50 flex justify-around items-center py-5 px-4 border-t border-outline-variant/10">
+<div class="flex flex-col items-center text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-[9px] mt-1 uppercase font-black tracking-widest">Mix</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="text-[9px] mt-1 uppercase font-black tracking-widest">Saved</span>
+</div>
+<div class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="text-[9px] mt-1 uppercase font-black tracking-widest">List</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="text-[9px] mt-1 uppercase font-black tracking-widest">Plan</span>
+</div>
+</nav>
+<footer class="w-full py-20 px-6 bg-surface-container border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+<div class="flex flex-col items-center md:items-start">
+<span class="text-3xl font-black italic text-primary tracking-tighter mb-4">Brasserie Editorial</span>
+<p class="text-sm text-on-surface-variant/70 font-medium max-w-xs text-center md:text-left leading-relaxed">Crafting digital culinary experiences for the modern home chef.</p>
+<p class="text-[10px] font-black uppercase tracking-widest text-primary/40 mt-8">© 2024 The Digital Brasserie Editorial.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-10">
+<div class="flex flex-col gap-4">
+<span class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">Experience</span>
+<a class="text-sm text-on-surface-variant/60 hover:text-primary transition-colors" href="#">Kitchen Guides</a>
+<a class="text-sm text-on-surface-variant/60 hover:text-primary transition-colors" href="#">Chef Stories</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">Company</span>
+<a class="text-sm text-on-surface-variant/60 hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-sm text-on-surface-variant/60 hover:text-primary transition-colors" href="#">Careers</a>
+<a class="text-sm text-on-surface-variant/60 hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
