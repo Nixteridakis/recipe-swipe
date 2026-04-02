@@ -21,6 +21,8 @@ type AppIconProps = {
   name: IconName;
   className?: string;
   filled?: boolean;
+  /** Stroke width in user units (default 1.8). Use ~2.2+ for small UI targets. */
+  strokeWidth?: number;
 };
 
 const paths: Record<IconName, string> = {
@@ -52,13 +54,19 @@ const paths: Record<IconName, string> = {
     "M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Zm6.5 11 1 2.5L22 17.5l-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5ZM5.5 13l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2Z",
   star:
     "m12 3.7 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.6 9.8l5.8-.8L12 3.7Z",
+  /** Standard bin + lid (Lucide-style); reads clearer at small sizes than a thin bucket. */
   trash:
-    "M9 4h6m-8 3h10M9.6 7l.5 11h3.8l.5-11M10 4.2l.5-1.2h3L14 4.2",
+    "M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
   user:
     "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 1 1 14 0",
 };
 
-export function AppIcon({ name, className, filled = false }: AppIconProps) {
+export function AppIcon({
+  name,
+  className,
+  filled = false,
+  strokeWidth: strokeWidthProp = 1.8,
+}: AppIconProps) {
   return (
     <svg
       aria-hidden="true"
@@ -68,7 +76,7 @@ export function AppIcon({ name, className, filled = false }: AppIconProps) {
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={1.8}
+      strokeWidth={strokeWidthProp}
     >
       <path d={paths[name]} />
     </svg>

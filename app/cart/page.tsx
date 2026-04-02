@@ -6,6 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { recipesByIdsQuery } from "@/sanity/lib/queries";
 import { AppIcon } from "../AppIcon";
 import { useCart } from "../cart-context";
+import { CompositionRing } from "./CompositionRing";
 import styles from "./page.module.css";
 
 type ShoppingIngredient = {
@@ -15,6 +16,7 @@ type ShoppingIngredient = {
   ingredient?: {
     _id?: string;
     name?: string;
+    /** Sanity slug: produce, meat-seafood, pantry, etc. */
     category?: string;
   };
 };
@@ -30,6 +32,8 @@ type AggregatedIngredient = {
   ingredientId: string;
   name: string;
   category: string;
+  /** Raw Sanity category slug for composition buckets */
+  categorySlug?: string;
   unit: string;
   quantity: number;
   recipes: Set<string>;
@@ -45,6 +49,18 @@ function normalizeCategory(category?: string) {
   return c ? c[0].toUpperCase() + c.slice(1) : "Other";
 }
 
+const PLANTS_WEEK_GOAL = 30;
+
+/** Map ingredient category slugs to the three composition segments (prototype). */
+function compositionBucket(
+  slug?: string,
+): "produce" | "protein" | "pantry" {
+  const s = (slug ?? "").toLowerCase();
+  if (s === "produce") return "produce";
+  if (s === "meat-seafood" || s === "dairy") return "protein";
+  return "pantry";
+}
+
 function formatQuantity(value: number) {
   if (Number.isInteger(value)) return String(value);
   return value.toFixed(2).replace(/\.?0+$/, "");
@@ -53,7 +69,6 @@ function formatQuantity(value: number) {
 export default function CartPage() {
   const { items, removeFromCart, clearCart } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [hidden, setHidden] = useState<Record<string, boolean>>({});
   const [recipes, setRecipes] = useState<ShoppingRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -107,6 +122,7 @@ export default function CartPage() {
           ingredientId,
           name: ingredientName,
           category,
+          categorySlug: ing.ingredient?.category,
           unit,
           quantity,
           recipes: new Set([recipe._id]),
@@ -144,28 +160,34 @@ export default function CartPage() {
       }
       return next;
     });
-    setChecked((prev) => {
-      const next = { ...prev };
-      for (const item of aggregatedItems) {
-        if (next[item.id] == null) next[item.id] = false;
-      }
-      return next;
-    });
   }, [aggregatedItems]);
 
   const itemCountLabel = `${String(aggregatedItems.length).padStart(2, "0")} ITEMS`;
-  const totalUnits = aggregatedItems.reduce(
-    (total, item) => total + (quantities[item.id] ?? 1),
-    0,
-  );
-  const checkedCount = aggregatedItems.reduce(
-    (total, item) => total + (checked[item.id] ? 1 : 0),
-    0,
-  );
-  const estimatedCost = totalUnits * 6.5;
-  const organicCount = aggregatedItems.length
-    ? Math.round((checkedCount / aggregatedItems.length) * 100)
-    : 0;
+
+  const composition = useMemo(() => {
+    let produce = 0;
+    let protein = 0;
+    let pantry = 0;
+    for (const item of aggregatedItems) {
+      const b = compositionBucket(item.categorySlug);
+      if (b === "produce") produce += 1;
+      else if (b === "protein") protein += 1;
+      else pantry += 1;
+    }
+    const total = produce + protein + pantry;
+    return { produce, protein, pantry, total };
+  }, [aggregatedItems]);
+
+  const plantCount = useMemo(() => {
+    let sum = 0;
+    for (const item of aggregatedItems) {
+      if (compositionBucket(item.categorySlug) !== "produce") continue;
+      sum += quantities[item.id] ?? 1;
+    }
+    return Math.min(PLANTS_WEEK_GOAL, sum);
+  }, [aggregatedItems, quantities]);
+
+  const plantsPercent = Math.round((plantCount / PLANTS_WEEK_GOAL) * 100);
 
   function updateQty(itemId: string, delta: number) {
     setQuantities((prev) => {
@@ -174,40 +196,32 @@ export default function CartPage() {
     });
   }
 
-  function toggleChecked(itemId: string) {
-    setChecked((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-  }
-
-  function clearChecked() {
-    setHidden((prev) => {
-      const next = { ...prev };
-      for (const item of aggregatedItems) {
-        if (checked[item.id]) next[item.id] = true;
-      }
-      return next;
-    });
-  }
-
   return (
     <main className={styles.main}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.kicker}>Shopping Cart</span>
-          <h1 className={styles.title}>Culinary Provisions</h1>
-          <p className={styles.subTitle}>
-            Build your ingredient run from the recipes you liked in Discover.
-          </p>
+          <h1 className={styles.title}>Your recipe basket</h1>
           <div className={styles.recipeTags}>
-            {items.slice(0, 4).map((item) => (
-              <span key={item._id} className={styles.recipeTag}>
-                {item.title ?? "Untitled"}
-              </span>
+            {items.map((item) => (
+              <div key={item._id} className={styles.recipeChip}>
+                <span className={styles.recipeChipLabel} title={item.title}>
+                  {item.title ?? "Untitled"}
+                </span>
+                <button
+                  type="button"
+                  className={styles.recipeChipRemove}
+                  onClick={() => removeFromCart(item._id)}
+                  aria-label={`Remove ${item.title ?? "recipe"} from basket`}
+                >
+                  <AppIcon name="close" className={styles.recipeChipRemoveIcon} />
+                </button>
+              </div>
             ))}
             {!items.length ? (
               <span className={styles.recipeTagMuted}>No recipes selected yet</span>
             ) : null}
             <Link href="/" className={styles.addRecipeButton}>
-              Add Recipe +
+              Add recipe +
             </Link>
           </div>
         </div>
@@ -229,9 +243,6 @@ export default function CartPage() {
                 <h2 className={styles.sectionTitle}>Ingredients</h2>
                 <p className={styles.sectionMeta}>{itemCountLabel}</p>
               </div>
-              <button type="button" className={styles.clearCheckedButton} onClick={clearChecked}>
-                Clear checked
-              </button>
             </div>
 
             {isLoading ? <p className={styles.emptyCopy}>Building shopping list...</p> : null}
@@ -244,16 +255,7 @@ export default function CartPage() {
                 <h3 className={styles.groupTitle}>{category}</h3>
                 <ul className={styles.list}>
                   {group.map((item) => (
-                    <li
-                      key={item.id}
-                      className={`${styles.item} ${checked[item.id] ? styles.itemChecked : ""}`}
-                    >
-                      <button
-                        type="button"
-                        className={styles.checkButton}
-                        onClick={() => toggleChecked(item.id)}
-                        aria-pressed={checked[item.id]}
-                      />
+                    <li key={item.id} className={styles.item}>
                       <div className={styles.itemBody}>
                         <p className={styles.itemTitle}>{item.name}</p>
                         <p className={styles.itemSubtitle}>
@@ -290,7 +292,11 @@ export default function CartPage() {
                         onClick={() => setHidden((prev) => ({ ...prev, [item.id]: true }))}
                         aria-label="Remove from shopping list"
                       >
-                        <AppIcon name="trash" className={styles.removeIcon} />
+                        <AppIcon
+                          name="trash"
+                          className={styles.removeIcon}
+                          strokeWidth={2.25}
+                        />
                       </button>
                     </li>
                   ))}
@@ -302,48 +308,51 @@ export default function CartPage() {
           <aside className={styles.sideColumn}>
             <div className={styles.summaryCard}>
               <h3 className={styles.summaryTitle}>Cart Insight</h3>
-              <div className={styles.summaryRow}>
-                <span>Estimated cost</span>
-                <strong>${estimatedCost.toFixed(2)}</strong>
+
+              <div className={styles.compositionBlock}>
+                <p className={styles.insightKicker}>Culinary Composition</p>
+                <CompositionRing composition={composition} />
+                <div className={styles.compositionLegend}>
+                  <div className={styles.legendItem}>
+                    <span className={`${styles.legendSwatch} ${styles.legendProduce}`} />
+                    <span className={styles.legendText}>Produce</span>
+                  </div>
+                  <div className={styles.legendItem}>
+                    <span className={`${styles.legendSwatch} ${styles.legendProtein}`} />
+                    <span className={styles.legendText}>Protein</span>
+                  </div>
+                  <div className={styles.legendItem}>
+                    <span className={`${styles.legendSwatch} ${styles.legendPantry}`} />
+                    <span className={styles.legendText}>Pantry</span>
+                  </div>
+                </div>
               </div>
-              <div className={styles.summaryRow}>
-                <span>Total units</span>
-                <strong>{totalUnits}</strong>
-              </div>
-              <div className={styles.summaryRow}>
-                <span>Organic count</span>
-                <strong>{organicCount}%</strong>
+
+              <div className={styles.plantsBlock}>
+                <p className={styles.insightKicker}>30 Plants a Week</p>
+                <div className={styles.plantsHead}>
+                  <span className={styles.plantsFraction}>
+                    {plantCount}{" "}
+                    <span className={styles.plantsGoal}>
+                      / {PLANTS_WEEK_GOAL}
+                    </span>
+                  </span>
+                  <span className={styles.plantsPct}>{plantsPercent}% Reached</span>
+                </div>
+                <div className={styles.plantsTrack}>
+                  <div
+                    className={styles.plantsFill}
+                    style={{ width: `${plantsPercent}%` }}
+                  />
+                </div>
+                <p className={styles.plantsHint}>
+                  You&apos;re {plantsPercent}% of the way to your weekly goal!
+                </p>
               </div>
 
               <button type="button" className={styles.checkoutButton}>
                 Checkout Items
               </button>
-            </div>
-
-            <div className={styles.essentialsCard}>
-              <h3 className={styles.essentialsTitle}>Missing Essentials?</h3>
-              <div className={styles.essentialList}>
-                <button type="button" className={styles.essentialItem}>
-                  <span className={styles.essentialIconWrap}>
-                    <AppIcon name="sparkles" className={styles.essentialIcon} />
-                  </span>
-                  <span className={styles.essentialText}>
-                    <strong>White Wine Vinegar</strong>
-                    <small>Aids acid balance</small>
-                  </span>
-                  <AppIcon name="plus" className={styles.essentialAddIcon} />
-                </button>
-                <button type="button" className={styles.essentialItem}>
-                  <span className={styles.essentialIconWrap}>
-                    <AppIcon name="sparkles" className={styles.essentialIcon} />
-                  </span>
-                  <span className={styles.essentialText}>
-                    <strong>Fresh Thyme</strong>
-                    <small>Herbaceous aroma</small>
-                  </span>
-                  <AppIcon name="plus" className={styles.essentialAddIcon} />
-                </button>
-              </div>
             </div>
 
             <div className={styles.sideActions}>
