@@ -25,9 +25,12 @@ todos:
     status: pending
   - id: css-swipe-discover
     content: Explore replacing Swiper in discover UX with a CSS-only swipe/scroll solution (no external carousel lib)
-    status: pending
+    status: completed
   - id: discover-reaction-buttons
     content: Fix Discover action row (dismiss / like / open recipe)—align cues, button behavior, cart updates, and a11y labels
+    status: completed
+  - id: discover-swipe-improvements
+    content: Improve Discover swipe feel (gesture threshold, snap behavior, velocity handling, and accidental-swipe prevention)
     status: pending
   - id: import-page-demo-gif
     content: Record and add a short loopable GIF demo of the Import page flow (URL/text → parse → save)
@@ -48,8 +51,9 @@ Pending:
 - [ ] ui-system-decision
 - [ ] ui-final-pass
 - [ ] netlify-production
-- [ ] css-swipe-discover
-- [ ] discover-reaction-buttons
+- [x] ~~css-swipe-discover~~
+- [x] ~~discover-reaction-buttons~~
+- [ ] discover-swipe-improvements
 - [ ] import-page-demo-gif
 
 ## Baseline in Place
@@ -71,12 +75,12 @@ Pending:
 
 ## Immediate Next Step
 
-- Complete `import-page-demo-gif`:
-  - Record the main happy path on `/import` at a fixed viewport; trim to a tight loop; optimize file size.
-  - Add or link the asset (README, docs, or external URL—avoid huge binaries in git if needed).
-  - Sanity-check: loop reads clearly at a glance.
+- Complete `discover-swipe-improvements`:
+  - Tune swipe threshold + velocity so intentional swipes feel quick but accidental drags do not trigger.
+  - Refine snap behavior and card transition timing for consistent mobile feel.
+  - Verify on touch + mouse/trackpad (left/right swipe, edge cases, rapid interactions).
 
-Then: `bring-integration` (Bring! path vs fallback, push/export from cart, real list verification).
+Then: `import-page-demo-gif` (capture, optimize, and place/link asset cleanly).
 
 ## discover-reaction-buttons (implementation notes)
 
