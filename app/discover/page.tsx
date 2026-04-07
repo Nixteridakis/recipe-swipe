@@ -4,6 +4,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { recipesQuery } from "@/sanity/lib/queries";
 import { DiscoverSwiper } from "../DiscoverSwiper";
 import styles from "../page.module.css";
+import discoverStyles from "./discover-page.module.css";
 
 export const metadata: Metadata = {
   title: "Discover Recipes | Brasserie",
@@ -35,7 +36,7 @@ export default async function DiscoverPage() {
   }
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} ${discoverStyles.main}`}>
       <DiscoverSwiper recipes={recipes} imageByRef={imageByRef} />
     </main>
   );
