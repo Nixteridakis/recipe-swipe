@@ -392,6 +392,10 @@
   .sidebar {
     position: sticky;
     top: calc(var(--layout-header-height) + var(--space-4));
+    max-height: calc(100svh - var(--layout-header-height) - (2 * var(--space-4)));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.35rem;
   }
 }
 

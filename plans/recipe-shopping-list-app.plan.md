@@ -75,12 +75,19 @@ Pending:
 
 ## Immediate Next Step
 
-- Complete `discover-swipe-improvements`:
+- Complete `import-page-demo-gif`:
+  - Record the main happy path on `/import` at a fixed viewport; trim to a tight loop; optimize file size.
+  - Add or link the asset (README, docs, or external URL—avoid huge binaries in git if needed).
+  - Sanity-check: loop reads clearly at a glance.
+
+Then: `bring-integration` (Bring! path vs fallback, push/export from cart, real list verification).
+
+## Final Step (post-Netlify mobile testing)
+
+- Complete `discover-swipe-improvements` last:
   - Tune swipe threshold + velocity so intentional swipes feel quick but accidental drags do not trigger.
   - Refine snap behavior and card transition timing for consistent mobile feel.
-  - Verify on touch + mouse/trackpad (left/right swipe, edge cases, rapid interactions).
-
-Then: `import-page-demo-gif` (capture, optimize, and place/link asset cleanly).
+  - Verify on touch + mouse/trackpad (left/right swipe, edge cases, rapid interactions), with final pass on Netlify/mobile devices.
 
 ## discover-reaction-buttons (implementation notes)
 

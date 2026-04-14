@@ -4,6 +4,10 @@ import { createClient } from "next-sanity";
 import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 
+import {
+  canonicalizeIngredientName,
+  normalizeUnit as normalizeSharedUnit,
+} from "@/lib/ingredient-normalization";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 
 type ParsedIngredient = {
@@ -80,7 +84,7 @@ const ALLOWED_UNIT_VALUES = new Set([
 
 function normalizeSanityUnit(unit: unknown): string | undefined {
   if (typeof unit !== "string") return undefined;
-  const u = unit.trim();
+  const u = normalizeSharedUnit(unit);
   if (!u) return undefined;
   return ALLOWED_UNIT_VALUES.has(u) ? u : undefined;
 }
@@ -171,42 +175,65 @@ export async function POST(req: Request) {
     ? recipe.ingredients
     : [];
 
-  const ingredientNames = Array.from(
+  const ingredientByCanonical = new Map<
+    string,
+    { canonical: string; sourceName: string; firstUnit?: string }
+  >();
+  for (const line of ingredientLines) {
+    const sourceName = line.item?.trim();
+    if (!sourceName) continue;
+    const canonical = canonicalizeIngredientName(sourceName);
+    if (!canonical) continue;
+    if (!ingredientByCanonical.has(canonical)) {
+      ingredientByCanonical.set(canonical, {
+        canonical,
+        sourceName,
+        firstUnit: typeof line.unit === "string" ? line.unit : undefined,
+      });
+    }
+  }
+
+  const ingredientCanonicals = Array.from(
     new Set(
-      ingredientLines
-        .map((i) => i.item?.trim())
+      Array.from(ingredientByCanonical.values())
+        .map((i) => i.canonical)
         .filter((x): x is string => Boolean(x))
     )
   );
 
-  const existingIngredients: { _id: string; name: string }[] =
-    ingredientNames.length > 0
+  const existingIngredients: { _id: string; name: string; canonicalName?: string }[] =
+    ingredientCanonicals.length > 0
       ? await writeClient.fetch(
-          '*[_type == "ingredient" && name in $names]{_id, name}',
-          { names: ingredientNames }
+          '*[_type == "ingredient" && (canonicalName in $canonicals || lower(name) in $canonicals)]{_id, name, canonicalName}',
+          { canonicals: ingredientCanonicals }
         )
       : [];
 
-  const ingredientIdByName = new Map(
-    existingIngredients.map((x) => [x.name, x._id] as const)
-  );
+  const ingredientIdByCanonical = new Map<string, string>();
+  for (const existing of existingIngredients) {
+    const canonical = canonicalizeIngredientName(existing.canonicalName ?? existing.name);
+    if (!canonical) continue;
+    ingredientIdByCanonical.set(canonical, existing._id);
+  }
 
-  const ingredientsToCreate = ingredientNames.filter(
-    (name) => !ingredientIdByName.has(name)
+  const ingredientsToCreate = ingredientCanonicals.filter(
+    (canonical) => !ingredientIdByCanonical.has(canonical)
   );
 
   // Create missing ingredients with deterministic IDs so the recipe can reference them immediately.
-  for (const name of ingredientsToCreate) {
-    const firstMatch = ingredientLines.find((i) => i.item === name);
-    const unit = normalizeSanityUnit(firstMatch?.unit) ?? "piece";
+  for (const canonical of ingredientsToCreate) {
+    const firstMatch = ingredientByCanonical.get(canonical);
+    const unit = normalizeSanityUnit(firstMatch?.firstUnit) ?? "piece";
+    const name = firstMatch?.sourceName ?? canonical;
 
-    const ingredientId = `ingredient-import-${sha1(name)}`;
-    ingredientIdByName.set(name, ingredientId);
+    const ingredientId = `ingredient-import-${sha1(canonical)}`;
+    ingredientIdByCanonical.set(canonical, ingredientId);
 
     await writeClient.create({
       _id: ingredientId,
       _type: "ingredient",
       name,
+      canonicalName: canonical,
       category: "other",
       defaultUnit: unit,
     });
@@ -216,8 +243,10 @@ export async function POST(req: Request) {
     .map((ing, idx) => {
       const ingredientName = ing.item?.trim();
       if (!ingredientName) return null;
+      const canonicalIngredientName = canonicalizeIngredientName(ingredientName);
+      if (!canonicalIngredientName) return null;
 
-      const ingredientRefId = ingredientIdByName.get(ingredientName);
+      const ingredientRefId = ingredientIdByCanonical.get(canonicalIngredientName);
       if (!ingredientRefId) return null;
 
       const quantity = computeIngredientQuantity(ing);
