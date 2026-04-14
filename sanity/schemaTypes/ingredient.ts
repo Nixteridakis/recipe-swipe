@@ -14,6 +14,13 @@ export const ingredient = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'canonicalName',
+      title: 'Canonical Name',
+      type: 'string',
+      description: 'Normalized key used for deduplication and cart aggregation.',
+      readOnly: true,
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',

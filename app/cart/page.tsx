@@ -4,6 +4,13 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { client } from "@/sanity/lib/client";
 import { recipesByIdsQuery } from "@/sanity/lib/queries";
+import {
+  areLikelySameIngredient,
+  canonicalizeIngredientName,
+  isPantryStaple,
+  quantityInBaseUnit,
+  resolveUnit,
+} from "@/lib/ingredient-normalization";
 import { AppIcon } from "../AppIcon";
 import { useCart } from "../cart-context";
 import { CompositionRing } from "./CompositionRing";
@@ -30,14 +37,19 @@ type ShoppingRecipe = {
 type AggregatedIngredient = {
   id: string;
   ingredientId: string;
+  canonicalName: string;
   name: string;
   category: string;
   /** Raw Sanity category slug for composition buckets */
   categorySlug?: string;
-  unit: string;
-  quantity: number;
+  measurements: Array<{
+    key: string;
+    quantity: number;
+    unit: string;
+    group: string;
+  }>;
   recipes: Set<string>;
-  unitConflict: boolean;
+  pantryStaple: boolean;
 };
 
 function normalizeUnit(unit?: string) {
@@ -66,10 +78,175 @@ function formatQuantity(value: number) {
   return value.toFixed(2).replace(/\.?0+$/, "");
 }
 
+function formatMeasurement(
+  measurement: AggregatedIngredient["measurements"][number],
+  totalMeasurements: number,
+) {
+  const hasMeaningfulUnit = Boolean(measurement.unit);
+  const isWholeNumber = Number.isInteger(measurement.quantity);
+  const shouldHideUnitlessWhole = !hasMeaningfulUnit && isWholeNumber;
+  if (shouldHideUnitlessWhole) return "";
+
+  const unitLabel = measurement.unit ? ` ${measurement.unit}` : "";
+  const qtyLabel =
+    measurement.quantity > 0 ? `${formatQuantity(measurement.quantity)}${unitLabel}` : "Quantity TBD";
+  if (totalMeasurements <= 1) return qtyLabel;
+  return `${qtyLabel}${measurement.group === "unknown" ? "" : ` (${measurement.group})`}`;
+}
+
+function deriveInitialQtyMultiplier(item: AggregatedIngredient) {
+  if (item.measurements.length !== 1) return 1;
+  const onlyMeasurement = item.measurements[0];
+  if (!onlyMeasurement) return 1;
+  if (onlyMeasurement.unit) return 1;
+  if (!Number.isInteger(onlyMeasurement.quantity)) return 1;
+  return Math.max(1, onlyMeasurement.quantity);
+}
+
+function buildLegacyAggregatedItems(recipes: ShoppingRecipe[]) {
+  const map = new Map<string, AggregatedIngredient>();
+  const ingredientUnits = new Map<string, Set<string>>();
+
+  for (const recipe of recipes) {
+    for (const ing of recipe.ingredients ?? []) {
+      const ingredientName = ing.ingredient?.name?.trim();
+      if (!ingredientName) continue;
+      const ingredientId = ing.ingredient?._id ?? ingredientName.toLowerCase();
+      const unit = normalizeUnit(ing.unit);
+      const quantity = typeof ing.quantity === "number" && Number.isFinite(ing.quantity) ? ing.quantity : 0;
+      const key = `${ingredientId}::${unit || "unitless"}`;
+      const category = normalizeCategory(ing.ingredient?.category);
+
+      if (!ingredientUnits.has(ingredientId)) ingredientUnits.set(ingredientId, new Set());
+      ingredientUnits.get(ingredientId)?.add(unit || "unitless");
+
+      const existing = map.get(key);
+      if (existing) {
+        existing.measurements[0].quantity += quantity;
+        existing.recipes.add(recipe._id);
+        continue;
+      }
+      map.set(key, {
+        id: key,
+        ingredientId,
+        canonicalName: canonicalizeIngredientName(ingredientName),
+        name: ingredientName,
+        category,
+        categorySlug: ing.ingredient?.category,
+        measurements: [{ key, quantity, unit, group: resolveUnit(unit).group }],
+        recipes: new Set([recipe._id]),
+        pantryStaple: isPantryStaple(ingredientName),
+      });
+    }
+  }
+
+  return Array.from(map.values())
+    .map((item) => {
+      const unitConflict = (ingredientUnits.get(item.ingredientId)?.size ?? 0) > 1;
+      if (!unitConflict || item.measurements.length > 1) return item;
+      item.measurements[0].group = unitConflict ? "mixed" : item.measurements[0].group;
+      return item;
+    })
+    .sort((a, b) => {
+      if (a.category !== b.category) return a.category.localeCompare(b.category);
+      return a.name.localeCompare(b.name);
+    });
+}
+
+function resolveAggressiveCanonicalKey(
+  baseCanonical: string,
+  canonicalKeys: string[],
+) {
+  for (const existing of canonicalKeys) {
+    if (existing === baseCanonical) return existing;
+    if (areLikelySameIngredient(existing, baseCanonical)) return existing;
+  }
+  canonicalKeys.push(baseCanonical);
+  return baseCanonical;
+}
+
+function buildNormalizedAggregatedItems(recipes: ShoppingRecipe[]) {
+  const ingredientsMap = new Map<string, AggregatedIngredient>();
+  const knownCanonicalKeys: string[] = [];
+
+  for (const recipe of recipes) {
+    for (const ing of recipe.ingredients ?? []) {
+      const ingredientName = ing.ingredient?.name?.trim();
+      if (!ingredientName) continue;
+      const baseCanonical = canonicalizeIngredientName(ingredientName);
+      if (!baseCanonical) continue;
+
+      const canonicalName = resolveAggressiveCanonicalKey(baseCanonical, knownCanonicalKeys);
+      const category = normalizeCategory(ing.ingredient?.category);
+      const quantity = typeof ing.quantity === "number" && Number.isFinite(ing.quantity) ? ing.quantity : 0;
+      const normalizedQuantity = quantityInBaseUnit(quantity, ing.unit, canonicalName);
+      const measurementKey = `${normalizedQuantity.group}::${normalizedQuantity.baseUnit || normalizedQuantity.unit || "unitless"}`;
+
+      const existingIngredient = ingredientsMap.get(canonicalName);
+      if (!existingIngredient) {
+        ingredientsMap.set(canonicalName, {
+          id: canonicalName,
+          ingredientId: ing.ingredient?._id ?? canonicalName,
+          canonicalName,
+          name: ingredientName,
+          category,
+          categorySlug: ing.ingredient?.category,
+          measurements: [
+            {
+              key: measurementKey,
+              quantity: normalizedQuantity.quantity,
+              unit: normalizedQuantity.baseUnit || normalizedQuantity.unit,
+              group: normalizedQuantity.group,
+            },
+          ],
+          recipes: new Set([recipe._id]),
+          pantryStaple: isPantryStaple(canonicalName),
+        });
+        continue;
+      }
+
+      existingIngredient.recipes.add(recipe._id);
+      if (existingIngredient.category === "Other" && category !== "Other") {
+        existingIngredient.category = category;
+        existingIngredient.categorySlug = ing.ingredient?.category;
+      }
+      if (ingredientName.length < existingIngredient.name.length) {
+        existingIngredient.name = ingredientName;
+      }
+
+      const existingMeasurement = existingIngredient.measurements.find(
+        (measurement) => measurement.key === measurementKey,
+      );
+      if (existingMeasurement) {
+        existingMeasurement.quantity += normalizedQuantity.quantity;
+      } else {
+        existingIngredient.measurements.push({
+          key: measurementKey,
+          quantity: normalizedQuantity.quantity,
+          unit: normalizedQuantity.baseUnit || normalizedQuantity.unit,
+          group: normalizedQuantity.group,
+        });
+      }
+    }
+  }
+
+  return Array.from(ingredientsMap.values())
+    .map((item) => ({
+      ...item,
+      measurements: item.measurements.sort((a, b) => a.key.localeCompare(b.key)),
+    }))
+    .sort((a, b) => {
+      if (a.category !== b.category) return a.category.localeCompare(b.category);
+      return a.name.localeCompare(b.name);
+    });
+}
+
 export default function CartPage() {
   const { items, removeFromCart, clearCart } = useCart();
+  const useLegacyAggregation = process.env.NEXT_PUBLIC_CART_LEGACY_AGGREGATION === "true";
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [hidden, setHidden] = useState<Record<string, boolean>>({});
+  const [showPantry, setShowPantry] = useState(false);
   const [recipes, setRecipes] = useState<ShoppingRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -94,81 +271,50 @@ export default function CartPage() {
     void load();
   }, [items]);
 
-  const aggregatedItems = useMemo(() => {
-    const map = new Map<string, AggregatedIngredient>();
-    const ingredientUnits = new Map<string, Set<string>>();
+  const aggregatedItems = useMemo(
+    () => (useLegacyAggregation ? buildLegacyAggregatedItems(recipes) : buildNormalizedAggregatedItems(recipes)),
+    [recipes, useLegacyAggregation],
+  );
 
-    for (const recipe of recipes) {
-      for (const ing of recipe.ingredients ?? []) {
-        const ingredientName = ing.ingredient?.name?.trim();
-        if (!ingredientName) continue;
-        const ingredientId = ing.ingredient?._id ?? ingredientName.toLowerCase();
-        const unit = normalizeUnit(ing.unit);
-        const quantity = typeof ing.quantity === "number" && Number.isFinite(ing.quantity) ? ing.quantity : 0;
-        const key = `${ingredientId}::${unit || "unitless"}`;
-        const category = normalizeCategory(ing.ingredient?.category);
+  const visibleItems = useMemo(
+    () =>
+      aggregatedItems.filter(
+        (item) => !hidden[item.id] && (showPantry || !item.pantryStaple),
+      ),
+    [aggregatedItems, hidden, showPantry],
+  );
 
-        if (!ingredientUnits.has(ingredientId)) ingredientUnits.set(ingredientId, new Set());
-        ingredientUnits.get(ingredientId)?.add(unit || "unitless");
-
-        const existing = map.get(key);
-        if (existing) {
-          existing.quantity += quantity;
-          existing.recipes.add(recipe._id);
-          continue;
-        }
-        map.set(key, {
-          id: key,
-          ingredientId,
-          name: ingredientName,
-          category,
-          categorySlug: ing.ingredient?.category,
-          unit,
-          quantity,
-          recipes: new Set([recipe._id]),
-          unitConflict: false,
-        });
-      }
-    }
-
-    return Array.from(map.values())
-      .map((item) => ({
-        ...item,
-        unitConflict: (ingredientUnits.get(item.ingredientId)?.size ?? 0) > 1,
-      }))
-      .filter((item) => !hidden[item.id])
-      .sort((a, b) => {
-        if (a.category !== b.category) return a.category.localeCompare(b.category);
-        return a.name.localeCompare(b.name);
-      });
-  }, [recipes, hidden]);
+  const hiddenPantryCount = useMemo(
+    () => aggregatedItems.filter((item) => !hidden[item.id] && item.pantryStaple).length,
+    [aggregatedItems, hidden],
+  );
 
   const groupedItems = useMemo(() => {
     const grouped = new Map<string, AggregatedIngredient[]>();
-    for (const item of aggregatedItems) {
+    for (const item of visibleItems) {
       if (!grouped.has(item.category)) grouped.set(item.category, []);
       grouped.get(item.category)?.push(item);
     }
     return Array.from(grouped.entries());
-  }, [aggregatedItems]);
+  }, [visibleItems]);
 
   useEffect(() => {
     setQuantities((prev) => {
       const next = { ...prev };
-      for (const item of aggregatedItems) {
-        if (next[item.id] == null) next[item.id] = 1;
+      for (const item of visibleItems) {
+        if (next[item.id] == null) next[item.id] = deriveInitialQtyMultiplier(item);
       }
       return next;
     });
-  }, [aggregatedItems]);
+  }, [visibleItems]);
 
-  const itemCountLabel = `${String(aggregatedItems.length).padStart(2, "0")} ITEMS`;
+  const itemCountLabel = `${String(visibleItems.length).padStart(2, "0")} ITEMS`;
 
   const composition = useMemo(() => {
     let produce = 0;
     let protein = 0;
     let pantry = 0;
-    for (const item of aggregatedItems) {
+    for (const item of visibleItems) {
       const b = compositionBucket(item.categorySlug);
       if (b === "produce") produce += 1;
       else if (b === "protein") protein += 1;
@@ -176,16 +322,16 @@ export default function CartPage() {
     }
     const total = produce + protein + pantry;
     return { produce, protein, pantry, total };
-  }, [aggregatedItems]);
+  }, [visibleItems]);
 
   const plantCount = useMemo(() => {
     let sum = 0;
-    for (const item of aggregatedItems) {
+    for (const item of visibleItems) {
       if (compositionBucket(item.categorySlug) !== "produce") continue;
       sum += quantities[item.id] ?? 1;
     }
     return Math.min(PLANTS_WEEK_GOAL, sum);
-  }, [aggregatedItems, quantities]);
+  }, [visibleItems, quantities]);
 
   const plantsPercent = Math.round((plantCount / PLANTS_WEEK_GOAL) * 100);
 
@@ -246,8 +392,19 @@ export default function CartPage() {
             </div>
 
             {isLoading ? <p className={styles.emptyCopy}>Building shopping list...</p> : null}
-            {!isLoading && !aggregatedItems.length ? (
+            {!isLoading && !visibleItems.length ? (
               <p className={styles.emptyCopy}>No ingredients found for selected recipes.</p>
+            ) : null}
+            {!isLoading && hiddenPantryCount > 0 ? (
+              <button
+                type="button"
+                className={styles.clearAllButton}
+                onClick={() => setShowPantry((prev) => !prev)}
+              >
+                {showPantry
+                  ? "Hide pantry staples"
+                  : `Show pantry staples (${hiddenPantryCount})`}
+              </button>
             ) : null}
 
             {groupedItems.map(([category, group]) => (
@@ -258,12 +415,23 @@ export default function CartPage() {
                     <li key={item.id} className={styles.item}>
                       <div className={styles.itemBody}>
                         <p className={styles.itemTitle}>{item.name}</p>
-                        <p className={styles.itemSubtitle}>
-                          {item.quantity > 0
-                            ? `${formatQuantity(item.quantity)}${item.unit ? ` ${item.unit}` : ""}`
-                            : "Quantity TBD"}
-                          {item.unitConflict ? " · Multiple units used" : ""}
-                        </p>
+                        {(() => {
+                          const detailParts = item.measurements
+                            .map((measurement) =>
+                              formatMeasurement(measurement, item.measurements.length),
+                            )
+                            .filter(Boolean);
+                          const details = detailParts.join(" + ");
+                          const showMultipleUnitsHint =
+                            item.measurements.length > 1 && detailParts.length > 0;
+                          if (!details && !showMultipleUnitsHint) return null;
+                          return (
+                            <p className={styles.itemSubtitle}>
+                              {details}
+                              {showMultipleUnitsHint ? " · Multiple units used" : ""}
+                            </p>
+                          );
+                        })()}
                       </div>
 
                       <div className={styles.qtyControl}>

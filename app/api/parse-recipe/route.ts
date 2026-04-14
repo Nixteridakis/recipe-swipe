@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { normalizeUnit as normalizeSharedUnit } from "@/lib/ingredient-normalization";
 
 type ParsedIngredient = {
   item: string;
@@ -100,33 +101,20 @@ function parseNumberLoose(raw: string) {
   return Number.isFinite(n) ? n : null;
 }
 
-function normalizeUnit(unitRaw: string) {
-  const u = unitRaw.trim().toLowerCase().replace(/\(s\)\s*$/i, "");
-  const stripped = u.replace(/[.]+$/g, "");
+function cleanIngredientItem(rawItem: string) {
+  const cleaned = rawItem
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!cleaned) return "";
 
-  // Map to your Sanity schema unit values.
-  const unitMap: Record<string, string> = {
-    tablespoon: "tbsp",
-    tsp: "tsp",
-    teaspoon: "tsp",
-    kilo: "kg",
-    kilogram: "kg",
-    gram: "g",
-    milliliter: "ml",
-    liter: "l",
-    litre: "l",
-    clove: "clove",
-    piece: "piece",
-    pinch: "pinch",
-    bunch: "bunch",
-    can: "can",
-    package: "package",
-    ounce: "oz",
-    lb: "lb",
-    pound: "lb",
-  };
-
-  return unitMap[stripped] ?? stripped ?? null;
+  const withoutLeadingUnitWords = cleaned.replace(
+    /^(?:tablespoon|tablespoons|teaspoon|teaspoons|tbsp|tsp|cup|cups|gram|grams|kg|g|ml|l)\s+/i,
+    "",
+  );
+  return withoutLeadingUnitWords.startsWith("of ")
+    ? withoutLeadingUnitWords.slice(3).trim()
+    : withoutLeadingUnitWords.trim();
 }
 
 function parseIngredientLine(rawLine: string): ParsedIngredient | null {
@@ -144,7 +132,8 @@ function parseIngredientLine(rawLine: string): ParsedIngredient | null {
 
   // No leading quantity => whole line is item
   if (!m) {
-    return { item: line, quantityMin: null, quantityMax: null, unit: null };
+    const item = cleanIngredientItem(line);
+    return { item, quantityMin: null, quantityMax: null, unit: null };
   }
 
   const qty1 = parseNumberLoose(m[1]);
@@ -165,10 +154,8 @@ function parseIngredientLine(rawLine: string): ParsedIngredient | null {
     };
   }
 
-  const item =
-    itemRemainder.startsWith("of ") ? itemRemainder.slice(3).trim() : itemRemainder;
-
-  const unit = normalizeUnit(unitCandidate);
+  const item = cleanIngredientItem(itemRemainder);
+  const unit = normalizeSharedUnit(unitCandidate);
 
   return {
     item,
