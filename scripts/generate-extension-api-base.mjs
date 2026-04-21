@@ -48,6 +48,8 @@ let sourceHint;
 if (mode === "production") {
   base =
     process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
     readEnvLocal("NEXT_PUBLIC_APP_URL") ||
     null;
   if (!base) {
@@ -57,7 +59,7 @@ if (mode === "production") {
     base = "http://localhost:3000";
   }
   sourceHint =
-    "NEXT_PUBLIC_APP_URL (pnpm run build regenerates this zip + api-base.js)";
+    "NEXT_PUBLIC_APP_URL or Netlify URL/DEPLOY_PRIME_URL (pnpm run build regenerates this zip + api-base.js)";
 } else {
   base =
     process.env.NEXT_LOCAL_APP_URL ||

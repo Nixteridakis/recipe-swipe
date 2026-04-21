@@ -22,7 +22,7 @@ todos:
     status: pending
   - id: netlify-production
     content: Ship to Netlify with env vars, cache/revalidation, Sanity CORS and smoke tests
-    status: pending
+    status: completed
   - id: css-swipe-discover
     content: Explore replacing Swiper in discover UX with a CSS-only swipe/scroll solution (no external carousel lib)
     status: completed
@@ -50,7 +50,7 @@ Pending:
 - [ ] bring-integration
 - [ ] ui-system-decision
 - [ ] ui-final-pass
-- [ ] netlify-production
+- [x] ~~netlify-production~~
 - [x] ~~css-swipe-discover~~
 - [x] ~~discover-reaction-buttons~~
 - [ ] discover-swipe-improvements
