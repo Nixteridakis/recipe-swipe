@@ -67,3 +67,44 @@ pnpm run dev
 
 Open app at http://localhost:3000
 Open sanity studio at http://localhost:3000/studio
+
+## Netlify Production
+
+### 1) Connect and Build
+
+- Connect the repo to Netlify.
+- Build command: `pnpm run build`
+- Publish directory: `.next`
+- Node version: `20` (configured in `netlify.toml`)
+
+### 2) Required Environment Variables (Netlify UI)
+
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NEXT_PUBLIC_SANITY_DATASET`
+- `NEXT_PUBLIC_SANITY_API_VERSION` (optional, defaults in code)
+- `SANITY_WRITE_TOKEN` (required for `/api/create-recipe`)
+
+Optional:
+- `NEXT_PUBLIC_APP_URL` (if omitted, production extension zip generation falls back to Netlify `URL` / `DEPLOY_PRIME_URL`)
+
+### 3) Sanity CORS Checklist
+
+In Sanity project API settings, allow these origins:
+- local: `http://localhost:3000`
+- production: your Netlify site URL (and custom domain if used)
+
+### 4) Smoke Tests After Deploy
+
+- App root loads: `GET /`
+- Recipe detail loads: `GET /recipe/<existing-slug>`
+- Cart route loads: `GET /cart`
+- Import route loads: `GET /import`
+- Health endpoint reports Sanity connectivity:
+
+```bash
+curl -s https://<your-netlify-site>/api/health
+```
+
+Expected:
+- `ok: true`
+- `sanity: "reachable"`
