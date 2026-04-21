@@ -23,6 +23,9 @@ todos:
   - id: netlify-production
     content: Ship to Netlify with env vars, cache/revalidation, Sanity CORS and smoke tests
     status: completed
+  - id: sanity-cart-production-fixes
+    content: Adjust Sanity + cart behavior for production (bug fixes from Netlify/live usage)
+    status: pending
   - id: css-swipe-discover
     content: Explore replacing Swiper in discover UX with a CSS-only swipe/scroll solution (no external carousel lib)
     status: completed
@@ -51,6 +54,7 @@ Pending:
 - [ ] ui-system-decision
 - [ ] ui-final-pass
 - [x] ~~netlify-production~~
+- [ ] sanity-cart-production-fixes
 - [x] ~~css-swipe-discover~~
 - [x] ~~discover-reaction-buttons~~
 - [ ] discover-swipe-improvements
@@ -75,12 +79,12 @@ Pending:
 
 ## Immediate Next Step
 
-- Complete `import-page-demo-gif`:
-  - Record the main happy path on `/import` at a fixed viewport; trim to a tight loop; optimize file size.
-  - Add or link the asset (README, docs, or external URL—avoid huge binaries in git if needed).
-  - Sanity-check: loop reads clearly at a glance.
+- Complete `sanity-cart-production-fixes`:
+  - Reproduce production-only bugs in Sanity reads/writes and cart add/remove/update behavior.
+  - Patch highest-impact breakages first (save/create recipe path, cart consistency, and stale state).
+  - Verify directly on Netlify (smoke flow: discover/import -> cart -> create recipe API -> refresh persistence).
 
-Then: `bring-integration` (Bring! path vs fallback, push/export from cart, real list verification).
+Then: `import-page-demo-gif`, followed by `bring-integration` (Bring! path vs fallback, push/export from cart, real list verification).
 
 ## Final Step (post-Netlify mobile testing)
 
