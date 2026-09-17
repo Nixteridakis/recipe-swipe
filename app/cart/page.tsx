@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { client } from "@/sanity/lib/client";
-import { recipesByIdsQuery } from "@/sanity/lib/queries";
 import {
   areLikelySameIngredient,
   canonicalizeIngredientName,
@@ -249,27 +247,43 @@ export default function CartPage() {
   const [showPantry, setShowPantry] = useState(false);
   const [recipes, setRecipes] = useState<ShoppingRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function load() {
       if (!items.length) {
         setRecipes([]);
+        setLoadError(null);
+        setIsLoading(false);
         return;
       }
       setIsLoading(true);
+      setLoadError(null);
       try {
-        const next = (await client.fetch(recipesByIdsQuery, {
-          ids: items.map((item) => item._id),
-        })) as ShoppingRecipe[];
-        setRecipes(Array.isArray(next) ? next : []);
+        const response = await fetch("/api/cart-recipes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: items.map((item) => item._id) }),
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("Cart recipe request failed");
+
+        const data = (await response.json()) as { recipes?: ShoppingRecipe[] };
+        setRecipes(Array.isArray(data.recipes) ? data.recipes : []);
       } catch {
+        if (controller.signal.aborted) return;
         setRecipes([]);
+        setLoadError("We couldn't load the ingredients. Please try again.");
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     }
     void load();
-  }, [items]);
+    return () => controller.abort();
+  }, [items, loadAttempt]);
 
   const aggregatedItems = useMemo(
     () => (useLegacyAggregation ? buildLegacyAggregatedItems(recipes) : buildNormalizedAggregatedItems(recipes)),
@@ -392,7 +406,19 @@ export default function CartPage() {
             </div>
 
             {isLoading ? <p className={styles.emptyCopy}>Building shopping list...</p> : null}
-            {!isLoading && !visibleItems.length ? (
+            {!isLoading && loadError ? (
+              <div className={styles.loadError} role="alert">
+                <p>{loadError}</p>
+                <button
+                  type="button"
+                  className={styles.clearAllButton}
+                  onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+                >
+                  Try again
+                </button>
+              </div>
+            ) : null}
+            {!isLoading && !loadError && !visibleItems.length ? (
               <p className={styles.emptyCopy}>No ingredients found for selected recipes.</p>
             ) : null}
             {!isLoading && hiddenPantryCount > 0 ? (
