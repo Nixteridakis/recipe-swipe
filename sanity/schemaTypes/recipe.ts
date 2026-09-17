@@ -1,5 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
-import { BookIcon } from '@sanity/icons'
+import { BookIcon } from '@sanity/icons/Book'
 
 export const recipe = defineType({
   name: 'recipe',
@@ -173,4 +173,3 @@ export const recipe = defineType({
     },
   },
 })
-
