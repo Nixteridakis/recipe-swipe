@@ -1,5 +1,5 @@
 import { defineType, defineField } from 'sanity'
-import { BasketIcon } from '@sanity/icons'
+import { BasketIcon } from '@sanity/icons/Basket'
 
 export const ingredient = defineType({
   name: 'ingredient',
@@ -74,4 +74,3 @@ export const ingredient = defineType({
     },
   },
 })
-
