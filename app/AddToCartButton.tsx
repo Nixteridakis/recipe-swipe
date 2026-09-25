@@ -15,7 +15,7 @@ type AddToCartButtonProps = {
 };
 
 export function AddToCartButton({ recipe, className }: AddToCartButtonProps) {
-  const { items, addToCart } = useCart();
+  const { items, addToCart, removeFromCart } = useCart();
   const isInCart = useMemo(
     () => items.some((item) => item._id === recipe._id),
     [items, recipe._id],
@@ -25,13 +25,16 @@ export function AddToCartButton({ recipe, className }: AddToCartButtonProps) {
     <button
       type="button"
       className={className}
-      aria-label={isInCart ? "Already in shopping cart" : "Add recipe to shopping cart"}
+      aria-label={isInCart ? "Remove recipe from recipe book" : "Add recipe to recipe book"}
       aria-pressed={isInCart}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        if (isInCart) return;
-        addToCart(recipe);
+        if (isInCart) {
+          removeFromCart(recipe._id);
+        } else {
+          addToCart(recipe);
+        }
       }}
     >
       <AppIcon name={isInCart ? "bag" : "plus"} />

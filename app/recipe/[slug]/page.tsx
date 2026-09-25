@@ -9,6 +9,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { recipeBySlugQuery } from "@/sanity/lib/queries";
 import { AppIcon } from "@/app/AppIcon";
 import { AddToCartButton } from "@/app/AddToCartButton";
+import { DeleteRecipeButton } from "@/app/DeleteRecipeButton";
 import styles from "./page.module.css";
 
 type RecipeIngredient = {
@@ -198,28 +199,29 @@ export default async function RecipePage({
                   </span>
                 ) : null}
               </div>
-              <div className={styles.heroActions}>
-                {recipe.sourceUrl ? (
-                  <a
-                    href={recipe.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={styles.sourceLink}
-                  >
-                    <span>Open source</span>
-                    <AppIcon name="arrow-right" className={styles.metaIcon} />
-                  </a>
-                ) : null}
-                <AddToCartButton
-                  className={styles.quickAddButton}
-                  recipe={{
-                    _id: recipe._id,
-                    title: recipe.title,
-                    slug: recipe.slug,
-                    imageRef: recipe.image?.asset?._ref,
-                  }}
-                />
-              </div>
+            <div className={styles.heroActions}>
+              {recipe.sourceUrl ? (
+                <a
+                  href={recipe.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.sourceLink}
+                >
+                  <span>Open source</span>
+                  <AppIcon name="arrow-right" className={styles.metaIcon} />
+                </a>
+              ) : null}
+              <AddToCartButton
+                className={styles.quickAddButton}
+                recipe={{
+                  _id: recipe._id,
+                  title: recipe.title,
+                  slug: recipe.slug,
+                  imageRef: recipe.image?.asset?._ref,
+                }}
+              />
+              <DeleteRecipeButton recipeId={recipe._id} recipeTitle={recipe.title} />
+            </div>
             </div>
           </div>
         </header>
