@@ -8,6 +8,7 @@ import {
   canonicalizeIngredientName,
   normalizeUnit as normalizeSharedUnit,
 } from "@/lib/ingredient-normalization";
+import { revalidateRecipePages, revalidateRecipePath } from "@/lib/revalidate-recipes";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 
 type ParsedIngredient = {
@@ -312,8 +313,8 @@ export async function POST(req: Request) {
     instructions: recipeBlocks,
   };
 
-  const existingRecipe = await writeClient.fetch(
-    '*[_id == $id][0]{_id}',
+  const existingRecipe = await writeClient.fetch<{ _id: string; slug?: { current?: string } } | null>(
+    '*[_id == $id][0]{_id, slug}',
     { id: recipeId }
   );
 
@@ -338,6 +339,10 @@ export async function POST(req: Request) {
   } else {
     await writeClient.create(recipeDoc);
   }
+
+  revalidateRecipePages(desiredSlug);
+  const previousSlug = existingRecipe?.slug?.current;
+  if (previousSlug && previousSlug !== desiredSlug) revalidateRecipePath(previousSlug);
 
   return cors(
     NextResponse.json({

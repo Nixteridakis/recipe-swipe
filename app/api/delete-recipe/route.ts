@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { revalidateRecipePages } from "@/lib/revalidate-recipes";
 import { getSanityWriteClient } from "@/sanity/lib/write-client";
 
 export async function DELETE(req: Request) {
@@ -23,8 +24,8 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    const existing = await writeClient.fetch<{ _id: string } | null>(
-      '*[_id == $id && _type == "recipe"][0]{_id}',
+    const existing = await writeClient.fetch<{ _id: string; slug?: { current?: string } } | null>(
+      '*[_id == $id && _type == "recipe"][0]{_id, slug}',
       { id },
     );
     if (!existing?._id) {
@@ -35,6 +36,7 @@ export async function DELETE(req: Request) {
     }
 
     await writeClient.delete(id);
+    revalidateRecipePages(existing.slug?.current);
 
     return NextResponse.json({ ok: true, deletedId: id });
   } catch (error) {

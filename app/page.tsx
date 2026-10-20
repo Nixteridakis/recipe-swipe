@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Browse the full recipe layout view.",
 };
 
+export const revalidate = 300;
+
 export type Recipe = {
   _id: string;
   title?: string;
@@ -29,8 +31,9 @@ export type Category = {
 };
 
 export default async function RecipesPage() {
-  const recipes = (await client.fetch(recipesQuery)) as Recipe[];
-  const categories = (await client.fetch(categoriesQuery)) as Category[];
+  const freshClient = client.withConfig({ useCdn: false });
+  const recipes = (await freshClient.fetch(recipesQuery, {}, { next: { revalidate } })) as Recipe[];
+  const categories = (await freshClient.fetch(categoriesQuery, {}, { next: { revalidate } })) as Category[];
 
   return (
     <Suspense fallback={null}>

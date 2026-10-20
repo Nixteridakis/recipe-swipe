@@ -39,11 +39,13 @@ type Recipe = {
   categories?: { _id: string; name: string; slug?: { current: string } }[];
 };
 
+export const revalidate = 300;
+
 async function getRecipeBySlug(slug: string) {
   return (await client.withConfig({ useCdn: false }).fetch(
     recipeBySlugQuery,
     { slug },
-    { cache: "no-store" },
+    { next: { revalidate } },
   )) as Recipe | null;
 }
 
