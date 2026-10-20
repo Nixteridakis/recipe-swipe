@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: "Flick through wildcard recipe cards in randomized cycles.",
 };
 
+export const revalidate = 300;
+
 type DiscoverRecipe = {
   _id: string;
   title?: string;
@@ -24,7 +26,11 @@ type DiscoverRecipe = {
 };
 
 export default async function DiscoverPage() {
-  const recipes = (await client.fetch(recipesQuery)) as DiscoverRecipe[];
+  const recipes = (await client.withConfig({ useCdn: false }).fetch(
+    recipesQuery,
+    {},
+    { next: { revalidate } },
+  )) as DiscoverRecipe[];
   const imageByRef: Record<string, string> = {};
 
   for (const recipe of recipes) {
@@ -41,4 +47,3 @@ export default async function DiscoverPage() {
     </main>
   );
 }
-

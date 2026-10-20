@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { canonicalizeIngredientName } from "@/lib/ingredient-normalization";
+import { revalidateRecipePages } from "@/lib/revalidate-recipes";
 import { fetchPublicImage } from "@/lib/safe-remote-image";
 import { getSanityWriteClient } from "@/sanity/lib/write-client";
 
@@ -287,10 +288,12 @@ async function saveRecipe(request: Request) {
       let patch = writeClient.patch(recipeId).set(fieldsToSet);
       if (fieldsToUnset.length) patch = patch.unset(fieldsToUnset);
       await patch.commit();
+      revalidateRecipePages(slug);
       return NextResponse.json({ ok: true, recipeId, slug, updated: true });
     }
 
     const created = await writeClient.create(recipeFields);
+    revalidateRecipePages(slug);
 
     return NextResponse.json({ ok: true, recipeId: created._id, slug, updated: false });
   } catch (error) {
