@@ -35,7 +35,7 @@ Both write **`chrome-extension/api-base.js`** and **`public/downloads/brasserie-
 
 1. Open a recipe page in a tab (e.g. a site that publishes `Recipe` JSON-LD).
 2. Click the extension icon.
-3. Click **Import to Recipe Book** — extracts, normalizes via `/api/parse-recipe`, then saves via `/api/create-recipe`.
+3. Enter the Brasserie application password the first time, then click **Import to Recipe Book**. The extension stores a signed session token locally, extracts and normalizes via `/api/parse-recipe`, then saves via `/api/create-recipe`.
 4. Optional: **Copy JSON** for debugging, or **Debug JSON-LD** if extraction fails.
 
 ## Compared to URL-only import

@@ -20,9 +20,10 @@ export function DeleteRecipeButton({ recipeId, recipeTitle }: DeleteRecipeButton
     setIsDeleting(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ id: recipeId });
-      const res = await fetch(`/api/delete-recipe?${params}`, {
+      const res = await fetch("/api/delete-recipe", {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: recipeId }),
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as { message?: string } | null;
@@ -40,7 +41,7 @@ export function DeleteRecipeButton({ recipeId, recipeTitle }: DeleteRecipeButton
     return (
       <div className={styles.confirmGroup}>
         <span className={styles.confirmText}>
-          Delete {recipeTitle ?? "recipe"}?
+          Permanently delete {recipeTitle ?? "this recipe"}?
         </span>
         <button
           type="button"

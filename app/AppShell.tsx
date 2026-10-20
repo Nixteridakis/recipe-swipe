@@ -32,6 +32,12 @@ const primaryNav: NavItem[] = [
     match: (pathname) => pathname === "/" || pathname.startsWith("/recipe/"),
   },
   {
+    label: "Create",
+    href: "/create",
+    icon: "plus",
+    match: (pathname) => pathname.startsWith("/create"),
+  },
+  {
     label: "Shopping Cart",
     href: "/cart",
     icon: "bag",
@@ -118,7 +124,7 @@ export function AppShell({ children }: AppShellProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (pathname.startsWith("/studio")) {
+  if (pathname.startsWith("/studio") || pathname === "/login") {
     return <>{children}</>;
   }
 
@@ -137,12 +143,17 @@ export function AppShell({ children }: AppShellProps) {
               <AppIcon name="search" className={styles.actionIcon} />
               <input type="search" placeholder="Search recipes..." aria-label="Search recipes" />
             </label>
-            <Link href="/studio" className={styles.importLink}>
+            <Link href="/create" className={styles.importLink}>
               CREATE
             </Link>
             <Link href="/import" className={styles.importLink}>
               Import
             </Link>
+            <form action="/api/auth/logout" method="post">
+              <button type="submit" className={styles.logoutButton}>
+                Sign out
+              </button>
+            </form>
           </div>
         </div>
       </header>

@@ -739,7 +739,6 @@
 .previewActions {
   margin-top: var(--space-6);
 }
-
 @media (min-width: 900px) {
   .extensionGrid {
     grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.65fr);
