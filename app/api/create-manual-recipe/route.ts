@@ -10,6 +10,7 @@ type IngredientInput = {
   name?: unknown;
   quantity?: unknown;
   unit?: unknown;
+  referenceId?: unknown;
 };
 
 const ALLOWED_UNITS = new Set([
@@ -68,7 +69,7 @@ function serverConfigurationError() {
   );
 }
 
-export async function POST(request: Request) {
+async function saveRecipe(request: Request) {
   const form = await request.formData().catch(() => null);
   if (!form) {
     return NextResponse.json({ error: "bad_request", message: "Invalid form submission." }, { status: 400 });
@@ -78,12 +79,14 @@ export async function POST(request: Request) {
   if (!writeClient) return serverConfigurationError();
 
   const title = String(form.get("title") ?? "").trim();
+  const recipeId = String(form.get("recipeId") ?? "").trim() || undefined;
   const description = String(form.get("description") ?? "").trim();
   const sourceUrl = String(form.get("sourceUrl") ?? "").trim();
   const imageUrl = String(form.get("imageUrl") ?? "").trim();
   const servings = optionalNumber(form.get("servings"));
   const prepTime = optionalNumber(form.get("prepTime"));
   const cookTime = optionalNumber(form.get("cookTime"));
+  const preserveInstructions = recipeId && form.get("preserveInstructions") === "true";
   const categoryIds = parseJsonArray(form.get("categoryIds")).filter(
     (value): value is string => typeof value === "string" && Boolean(value),
   );
@@ -113,6 +116,7 @@ export async function POST(request: Request) {
       name: typeof ingredient.name === "string" ? ingredient.name.trim() : "",
       quantity: Number(ingredient.quantity),
       unit: typeof ingredient.unit === "string" ? ingredient.unit.trim() : "",
+      referenceId: typeof ingredient.referenceId === "string" ? ingredient.referenceId : undefined,
     }))
     .filter((ingredient) => ingredient.name);
 
@@ -133,19 +137,41 @@ export async function POST(request: Request) {
   }
 
   try {
-    const baseSlug = slugify(title);
-    const existingSlugs = await writeClient.fetch<string[]>(
-      '*[_type == "recipe" && slug.current match $slugPrefix].slug.current',
-      { slugPrefix: `${baseSlug}*` },
-    );
-    let slug = baseSlug;
-    let suffix = 2;
-    while (existingSlugs.includes(slug)) slug = `${baseSlug}-${suffix++}`;
+    let slug: string;
+    if (recipeId) {
+      const existingRecipe = await writeClient.fetch<{ slug?: { current?: string } } | null>(
+        '*[_type == "recipe" && _id == $recipeId][0]{slug}',
+        { recipeId },
+      );
+      if (!existingRecipe) {
+        return NextResponse.json({ error: "not_found", message: "Recipe not found." }, { status: 404 });
+      }
+      slug = existingRecipe.slug?.current || slugify(title);
+    } else {
+      const baseSlug = slugify(title);
+      const existingSlugs = await writeClient.fetch<string[]>(
+        '*[_type == "recipe" && slug.current match $slugPrefix].slug.current',
+        { slugPrefix: `${baseSlug}*` },
+      );
+      slug = baseSlug;
+      let suffix = 2;
+      while (existingSlugs.includes(slug)) slug = `${baseSlug}-${suffix++}`;
+    }
 
     const normalizedIngredients = ingredients
       .map((ingredient) => ({ ...ingredient, canonical: canonicalizeIngredientName(ingredient.name) }))
       .filter((ingredient) => ingredient.canonical);
     const canonicals = Array.from(new Set(normalizedIngredients.map((ingredient) => ingredient.canonical)));
+    const suppliedReferenceIds = Array.from(
+      new Set(normalizedIngredients.flatMap((ingredient) => ingredient.referenceId ? [ingredient.referenceId] : [])),
+    );
+    const validReferenceIds = suppliedReferenceIds.length
+      ? new Set(
+          await writeClient.fetch<string[]>('*[_type == "ingredient" && _id in $ids]._id', {
+            ids: suppliedReferenceIds,
+          }),
+        )
+      : new Set<string>();
     const existingIngredients = await writeClient.fetch<Array<{ _id: string; name: string; canonicalName?: string }>>(
       '*[_type == "ingredient" && (canonicalName in $canonicals || lower(name) in $canonicals)]{_id, name, canonicalName}',
       { canonicals },
@@ -158,6 +184,7 @@ export async function POST(request: Request) {
     );
 
     for (const ingredient of normalizedIngredients) {
+      if (ingredient.referenceId && validReferenceIds.has(ingredient.referenceId)) continue;
       if (ingredientIdByCanonical.has(ingredient.canonical)) continue;
       const ingredientId = `ingredient-manual-${hash(ingredient.canonical)}`;
       await writeClient.createIfNotExists({
@@ -173,7 +200,13 @@ export async function POST(request: Request) {
 
     const ingredientRefs = normalizedIngredients.map((ingredient, index) => ({
       _key: `ingredient-${index}-${hash(`${ingredient.canonical}-${index}`).slice(0, 8)}`,
-      ingredient: { _type: "reference", _ref: ingredientIdByCanonical.get(ingredient.canonical) },
+      ingredient: {
+        _type: "reference",
+        _ref:
+          ingredient.referenceId && validReferenceIds.has(ingredient.referenceId)
+            ? ingredient.referenceId
+            : ingredientIdByCanonical.get(ingredient.canonical),
+      },
       quantity: ingredient.quantity,
       ...(ingredient.unit ? { unit: ingredient.unit } : {}),
     }));
@@ -214,7 +247,7 @@ export async function POST(request: Request) {
       ? await writeClient.fetch<string[]>('*[_type == "category" && _id in $ids]._id', { ids: categoryIds })
       : [];
 
-    const created = await writeClient.create({
+    const recipeFields = {
       _id: `recipe-manual-${hash(slug)}`,
       _type: "recipe",
       title,
@@ -228,9 +261,38 @@ export async function POST(request: Request) {
       ingredients: ingredientRefs,
       instructions: portableTextSteps(instructions),
       categories: validCategoryIds.map((id) => ({ _type: "reference", _key: hash(id).slice(0, 12), _ref: id })),
-    });
+    };
 
-    return NextResponse.json({ ok: true, recipeId: created._id, slug });
+    if (recipeId) {
+      const fieldsToSet = {
+        title,
+        slug: recipeFields.slug,
+        servings,
+        ingredients: recipeFields.ingredients,
+        ...(!preserveInstructions ? { instructions: recipeFields.instructions } : {}),
+        categories: recipeFields.categories,
+        ...(description ? { description } : {}),
+        ...(sourceUrl ? { sourceUrl } : {}),
+        ...(prepTime != null ? { prepTime } : {}),
+        ...(cookTime != null ? { cookTime } : {}),
+        ...(image ? { image } : {}),
+      };
+      const fieldsToUnset = [
+        ...(!description ? ["description"] : []),
+        ...(!sourceUrl ? ["sourceUrl"] : []),
+        ...(prepTime == null ? ["prepTime"] : []),
+        ...(cookTime == null ? ["cookTime"] : []),
+        ...(form.get("removeImage") === "true" && !image ? ["image"] : []),
+      ];
+      let patch = writeClient.patch(recipeId).set(fieldsToSet);
+      if (fieldsToUnset.length) patch = patch.unset(fieldsToUnset);
+      await patch.commit();
+      return NextResponse.json({ ok: true, recipeId, slug, updated: true });
+    }
+
+    const created = await writeClient.create(recipeFields);
+
+    return NextResponse.json({ ok: true, recipeId: created._id, slug, updated: false });
   } catch (error) {
     console.error("create-manual-recipe failed:", error);
     if (error instanceof Error && error.message === "INVALID_IMAGE_URL") {
@@ -246,4 +308,12 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+}
+
+export async function POST(request: Request) {
+  return saveRecipe(request);
+}
+
+export async function PATCH(request: Request) {
+  return saveRecipe(request);
 }

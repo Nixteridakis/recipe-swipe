@@ -8,8 +8,30 @@ import { formatFailedFetchMessage } from "@/lib/api-error-message";
 import styles from "./page.module.css";
 
 type Category = { _id: string; name: string };
-type IngredientRow = { id: number; name: string; quantity: string; unit: string };
-type InstructionRow = { id: number; text: string };
+type IngredientRow = {
+  id: string;
+  name: string;
+  quantity: string;
+  unit: string;
+  referenceId?: string;
+  originalName?: string;
+};
+type InstructionRow = { id: string; text: string };
+
+export type EditableRecipe = {
+  _id: string;
+  title?: string;
+  slug: string;
+  description?: string;
+  sourceUrl?: string;
+  servings?: number;
+  prepTime?: number;
+  cookTime?: number;
+  imageUrl?: string;
+  categoryIds: string[];
+  ingredients: Array<{ name: string; quantity: number; unit?: string; referenceId?: string }>;
+  instructions: string[];
+};
 
 const UNITS = [
   ["", "No unit"], ["piece", "piece(s)"], ["cup", "cup(s)"], ["tbsp", "tablespoon(s)"],
@@ -18,24 +40,45 @@ const UNITS = [
   ["clove", "clove(s)"], ["bunch", "bunch"], ["can", "can(s)"], ["package", "package"],
 ] as const;
 
-let nextRowId = 2;
-const newIngredient = (): IngredientRow => ({ id: nextRowId++, name: "", quantity: "", unit: "" });
-const newInstruction = (): InstructionRow => ({ id: nextRowId++, text: "" });
+let nextRowId = 0;
+const rowId = (type: string) => `${type}-${Date.now()}-${nextRowId++}`;
+const newIngredient = (): IngredientRow => ({ id: rowId("ingredient"), name: "", quantity: "", unit: "" });
+const newInstruction = (): InstructionRow => ({ id: rowId("instruction"), text: "" });
 
-export function CreateRecipeForm({ categories }: { categories: Category[] }) {
+export function CreateRecipeForm({
+  categories,
+  initialRecipe,
+}: {
+  categories: Category[];
+  initialRecipe?: EditableRecipe;
+}) {
   const router = useRouter();
-  const [ingredients, setIngredients] = useState<IngredientRow[]>([
-    { id: 0, name: "", quantity: "", unit: "" },
-  ]);
-  const [instructions, setInstructions] = useState<InstructionRow[]>([{ id: 1, text: "" }]);
+  const isEditing = Boolean(initialRecipe);
+  const [ingredients, setIngredients] = useState<IngredientRow[]>(() =>
+    initialRecipe?.ingredients.length
+      ? initialRecipe.ingredients.map((ingredient, index) => ({
+          id: `ingredient-${index}`,
+          name: ingredient.name,
+          quantity: String(ingredient.quantity),
+          unit: ingredient.unit ?? "",
+          referenceId: ingredient.referenceId,
+          originalName: ingredient.name,
+        }))
+      : [{ id: "ingredient-0", name: "", quantity: "", unit: "" }],
+  );
+  const [instructions, setInstructions] = useState<InstructionRow[]>(() =>
+    initialRecipe?.instructions.length
+      ? initialRecipe.instructions.map((text, index) => ({ id: `instruction-${index}`, text }))
+      : [{ id: "instruction-0", text: "" }],
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function updateIngredient(id: number, field: keyof Omit<IngredientRow, "id">, value: string) {
+  function updateIngredient(id: string, field: keyof Omit<IngredientRow, "id">, value: string) {
     setIngredients((rows) => rows.map((row) => (row.id === id ? { ...row, [field]: value } : row)));
   }
 
-  function updateInstruction(id: number, text: string) {
+  function updateInstruction(id: string, text: string) {
     setInstructions((rows) => rows.map((row) => (row.id === id ? { ...row, text } : row)));
   }
 
@@ -45,26 +88,44 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
     setError(null);
 
     const form = new FormData(event.currentTarget);
+    if (initialRecipe) form.set("recipeId", initialRecipe._id);
     form.set(
       "ingredients",
-      JSON.stringify(ingredients.filter((row) => row.name.trim()).map(({ name, quantity, unit }) => ({ name, quantity, unit }))),
+      JSON.stringify(
+        ingredients
+          .filter((row) => row.name.trim())
+          .map(({ name, quantity, unit, referenceId, originalName }) => ({
+            name,
+            quantity,
+            unit,
+            ...(referenceId && name.trim() === originalName?.trim() ? { referenceId } : {}),
+          })),
+      ),
     );
     form.set(
       "instructions",
       JSON.stringify(instructions.map((row) => row.text.trim()).filter(Boolean)),
     );
     form.set("categoryIds", JSON.stringify(form.getAll("categoryId")));
+    const instructionValues = instructions.map((row) => row.text.trim()).filter(Boolean);
+    const instructionsUnchanged =
+      initialRecipe?.instructions.length === instructionValues.length &&
+      initialRecipe.instructions.every((step, index) => step === instructionValues[index]);
+    form.set("preserveInstructions", String(Boolean(initialRecipe && instructionsUnchanged)));
     form.delete("categoryId");
 
     try {
-      const response = await fetch("/api/create-manual-recipe", { method: "POST", body: form });
+      const response = await fetch("/api/create-manual-recipe", {
+        method: isEditing ? "PATCH" : "POST",
+        body: form,
+      });
       const body = await response.text();
       if (!response.ok) {
         setError(formatFailedFetchMessage(body, response.status));
         return;
       }
       const result = JSON.parse(body) as { slug?: string };
-      if (!result.slug) throw new Error("The server did not return the new recipe.");
+      if (!result.slug) throw new Error("The server did not return the saved recipe.");
       router.push(`/recipe/${result.slug}`);
       router.refresh();
     } catch (err) {
@@ -76,16 +137,20 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
 
   return (
     <main className={styles.page}>
-      <Link href="/" className={styles.backLink}>
+      <Link href={initialRecipe ? `/recipe/${initialRecipe.slug}` : "/"} className={styles.backLink}>
         <AppIcon name="arrow-right" className={styles.backIcon} />
-        Back to recipes
+        {initialRecipe ? "Back to recipe" : "Back to recipes"}
       </Link>
 
       <header className={styles.hero}>
         <div>
-          <span className={styles.kicker}>Kitchen notebook</span>
-          <h1 className={styles.title}>Create a recipe</h1>
-          <p className={styles.lead}>Write it once, then keep it ready for every shop and every service.</p>
+          <span className={styles.kicker}>{isEditing ? "Refine the recipe" : "Kitchen notebook"}</span>
+          <h1 className={styles.title}>{isEditing ? "Edit recipe" : "Create a recipe"}</h1>
+          <p className={styles.lead}>
+            {isEditing
+              ? "Adjust the details, ingredients, and method without starting over."
+              : "Write it once, then keep it ready for every shop and every service."}
+          </p>
         </div>
         <span className={styles.heroNumber}>01</span>
       </header>
@@ -99,27 +164,27 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
           <div className={styles.fieldGrid}>
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>Recipe name *</span>
-              <input name="title" required placeholder="Roasted tomato orzo" />
+              <input name="title" required placeholder="Roasted tomato orzo" defaultValue={initialRecipe?.title} />
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>Description</span>
-              <textarea name="description" rows={3} placeholder="A short introduction to the dish..." />
+              <textarea name="description" rows={3} placeholder="A short introduction to the dish..." defaultValue={initialRecipe?.description} />
             </label>
             <label className={styles.field}>
               <span>Servings *</span>
-              <input name="servings" required type="number" min="1" step="1" defaultValue="4" />
+              <input name="servings" required type="number" min="1" step="1" defaultValue={initialRecipe?.servings ?? 4} />
             </label>
             <label className={styles.field}>
               <span>Prep time (minutes)</span>
-              <input name="prepTime" type="number" min="0" step="1" />
+              <input name="prepTime" type="number" min="0" step="1" defaultValue={initialRecipe?.prepTime} />
             </label>
             <label className={styles.field}>
               <span>Cook time (minutes)</span>
-              <input name="cookTime" type="number" min="0" step="1" />
+              <input name="cookTime" type="number" min="0" step="1" defaultValue={initialRecipe?.cookTime} />
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>Source URL</span>
-              <input name="sourceUrl" type="url" placeholder="https://..." />
+              <input name="sourceUrl" type="url" placeholder="https://..." defaultValue={initialRecipe?.sourceUrl} />
             </label>
           </div>
         </section>
@@ -188,6 +253,16 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
               <span className={styles.sectionNumber}>04</span>
               <div><h2>Image</h2><p>Upload a file or paste an image URL.</p></div>
             </div>
+            {initialRecipe?.imageUrl ? (
+              <div className={styles.currentImage}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={initialRecipe.imageUrl} alt="Current recipe" />
+                <label>
+                  <input type="checkbox" name="removeImage" value="true" />
+                  Remove current image
+                </label>
+              </div>
+            ) : null}
             <label className={styles.fileDrop}>
               <AppIcon name="plus" />
               <span>Choose image</span>
@@ -209,7 +284,12 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
             <div className={styles.categoryGrid}>
               {categories.map((category) => (
                 <label className={styles.category} key={category._id}>
-                  <input type="checkbox" name="categoryId" value={category._id} />
+                  <input
+                    type="checkbox"
+                    name="categoryId"
+                    value={category._id}
+                    defaultChecked={initialRecipe?.categoryIds.includes(category._id)}
+                  />
                   <span>{category.name}</span>
                 </label>
               ))}
@@ -220,11 +300,11 @@ export function CreateRecipeForm({ categories }: { categories: Category[] }) {
 
         <section className={styles.submitCard}>
           <div className={styles.submitCopy}>
-            <strong>Ready to cook?</strong>
-            <span>The recipe will be saved directly to your collection.</span>
+            <strong>{isEditing ? "Ready to save?" : "Ready to cook?"}</strong>
+            <span>{isEditing ? "Your changes will update this recipe." : "The recipe will be saved directly to your collection."}</span>
           </div>
           <button className={styles.submitButton} type="submit" disabled={isSaving}>
-            <AppIcon name="chef-hat" /> {isSaving ? "Saving recipe..." : "Create recipe"}
+            <AppIcon name="chef-hat" /> {isSaving ? "Saving recipe..." : isEditing ? "Save changes" : "Create recipe"}
           </button>
         </section>
         {error ? <p className={styles.error} role="alert">{error}</p> : null}

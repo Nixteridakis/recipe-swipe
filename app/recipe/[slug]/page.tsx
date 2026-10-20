@@ -40,7 +40,11 @@ type Recipe = {
 };
 
 async function getRecipeBySlug(slug: string) {
-  return (await client.fetch(recipeBySlugQuery, { slug })) as Recipe | null;
+  return (await client.withConfig({ useCdn: false }).fetch(
+    recipeBySlugQuery,
+    { slug },
+    { cache: "no-store" },
+  )) as Recipe | null;
 }
 
 const portableTextComponents = {
@@ -211,6 +215,10 @@ export default async function RecipePage({
                   <AppIcon name="arrow-right" className={styles.metaIcon} />
                 </a>
               ) : null}
+              <Link href={`/recipe/${slug}/edit`} className={styles.sourceLink}>
+                <span>Edit recipe</span>
+                <AppIcon name="settings" className={styles.metaIcon} />
+              </Link>
               <AddToCartButton
                 className={styles.quickAddButton}
                 allowRemove
