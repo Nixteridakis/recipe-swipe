@@ -57,6 +57,7 @@ Create `.env.local` in the project root:
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=your_dataset
 SANITY_WRITE_TOKEN=your_sanity_write_token
+RECIPE_ADMIN_PASSWORD=choose_a_strong_application_password
 ```
 
 ### 3) Run the app
@@ -82,7 +83,8 @@ Open sanity studio at http://localhost:3000/studio
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`
 - `NEXT_PUBLIC_SANITY_DATASET`
 - `NEXT_PUBLIC_SANITY_API_VERSION` (optional, defaults in code)
-- `SANITY_WRITE_TOKEN` (required for `/api/create-recipe`)
+- `SANITY_WRITE_TOKEN` (required for server-side recipe creation and deletion)
+- `RECIPE_ADMIN_PASSWORD` (required to sign in to the application)
 
 Optional:
 - `NEXT_PUBLIC_APP_URL` (if omitted, production extension zip generation falls back to Netlify `URL` / `DEPLOY_PRIME_URL`)

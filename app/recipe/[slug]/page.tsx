@@ -213,6 +213,7 @@ export default async function RecipePage({
               ) : null}
               <AddToCartButton
                 className={styles.quickAddButton}
+                allowRemove
                 recipe={{
                   _id: recipe._id,
                   title: recipe.title,
@@ -221,7 +222,7 @@ export default async function RecipePage({
                 }}
               />
               <DeleteRecipeButton recipeId={recipe._id} recipeTitle={recipe.title} />
-            </div>
+          </div>
             </div>
           </div>
         </header>

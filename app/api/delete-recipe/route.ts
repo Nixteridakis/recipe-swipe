@@ -1,13 +1,11 @@
 export const runtime = "nodejs";
 
-import { createClient } from "next-sanity";
 import { NextResponse } from "next/server";
-
-import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { getSanityWriteClient } from "@/sanity/lib/write-client";
 
 export async function DELETE(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+  const body = (await req.json().catch(() => null)) as { id?: unknown } | null;
+  const id = typeof body?.id === "string" ? body.id : null;
 
   if (!id) {
     return NextResponse.json(
@@ -16,24 +14,19 @@ export async function DELETE(req: Request) {
     );
   }
 
-  const writeToken = process.env.SANITY_WRITE_TOKEN;
-  if (!writeToken) {
+  const writeClient = getSanityWriteClient();
+  if (!writeClient) {
     return NextResponse.json(
-      { error: "missing_write_token", message: "Delete operation is not configured." },
-      { status: 500 }
+      { error: "write_not_configured", message: "Recipe deletion is not configured on this server." },
+      { status: 503 },
     );
   }
 
-  const writeClient = createClient({
-    projectId,
-    dataset,
-    apiVersion,
-    useCdn: false,
-    token: writeToken,
-  });
-
   try {
-    const existing = await writeClient.fetch("*[_id == $id][0]{_id}", { id });
+    const existing = await writeClient.fetch<{ _id: string } | null>(
+      '*[_id == $id && _type == "recipe"][0]{_id}',
+      { id },
+    );
     if (!existing?._id) {
       return NextResponse.json(
         { error: "not_found", message: "Recipe not found." },
@@ -46,10 +39,16 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ ok: true, deletedId: id });
   } catch (error) {
     console.error("delete-recipe failed:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const statusCode = typeof error === "object" && error && "statusCode" in error ? Number(error.statusCode) : 0;
+    const isConfigurationError = statusCode === 401 || statusCode === 403;
     return NextResponse.json(
-      { error: "delete_failed", message, details: String(error) },
-      { status: 500 }
+      {
+        error: isConfigurationError ? "write_not_configured" : "delete_failed",
+        message: isConfigurationError
+          ? "Recipe deletion is not configured on this server. Check the Sanity write token."
+          : "The recipe could not be deleted. Please try again.",
+      },
+      { status: isConfigurationError ? 503 : 500 },
     );
   }
 }

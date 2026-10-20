@@ -38,7 +38,7 @@ type CreateRecipeBody = {
 function cors(res: NextResponse) {
   res.headers.set("Access-Control-Allow-Origin", "*");
   res.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+  res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   return res;
 }
 
@@ -352,4 +352,3 @@ export async function POST(req: Request) {
 export async function OPTIONS() {
   return cors(new NextResponse(null, { status: 204 }));
 }
-

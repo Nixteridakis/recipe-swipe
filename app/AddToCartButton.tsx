@@ -12,9 +12,10 @@ type AddToCartButtonProps = {
     imageRef?: string;
   };
   className?: string;
+  allowRemove?: boolean;
 };
 
-export function AddToCartButton({ recipe, className }: AddToCartButtonProps) {
+export function AddToCartButton({ recipe, className, allowRemove = false }: AddToCartButtonProps) {
   const { items, addToCart, removeFromCart } = useCart();
   const isInCart = useMemo(
     () => items.some((item) => item._id === recipe._id),
@@ -25,14 +26,20 @@ export function AddToCartButton({ recipe, className }: AddToCartButtonProps) {
     <button
       type="button"
       className={className}
-      aria-label={isInCart ? "Remove recipe from recipe book" : "Add recipe to recipe book"}
+      aria-label={
+        isInCart
+          ? allowRemove
+            ? "Remove recipe from recipe book"
+            : "Recipe is in recipe book"
+          : "Add recipe to recipe book"
+      }
       aria-pressed={isInCart}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        if (isInCart) {
+        if (isInCart && allowRemove) {
           removeFromCart(recipe._id);
-        } else {
+        } else if (!isInCart) {
           addToCart(recipe);
         }
       }}

@@ -28,12 +28,14 @@
       .error { color: #c00; font-size: 12px; margin-top: 6px; }
       .success { color: #060; font-size: 12px; margin-top: 6px; }
       .meta { margin-top: 8px; font-size: 11px; color: #888; }
+      input { width: 100%; margin-bottom: 8px; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
     </style>
   </head>
   <body>
     <h1>Recipe Book Importer</h1>
     <p>Import the recipe from this tab into Brasserie (extract + save).</p>
     <div style="margin-top: 10px;">
+      <input type="password" id="admin-password" placeholder="Application password (first use only)" autocomplete="current-password" />
       <button type="button" id="import" class="primary">Import to Recipe Book</button>
       <button type="button" id="copy" disabled>Copy JSON</button>
       <button type="button" id="debug">Debug JSON-LD</button>

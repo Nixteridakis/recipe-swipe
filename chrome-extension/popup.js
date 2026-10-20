@@ -3,6 +3,7 @@ const copyBtn = document.getElementById("copy");
 const debugBtn = document.getElementById("debug");
 const messageEl = document.getElementById("message");
 const metaEl = document.getElementById("meta");
+const passwordInput = document.getElementById("admin-password");
 
 /** From api-base.js — baked at zip:extension from NEXT_PUBLIC_APP_URL */
 function getApiBase() {
@@ -22,6 +23,33 @@ function showMessage(text, type = "") {
 function showMeta(text) {
   metaEl.textContent = text;
 }
+
+async function getSessionToken() {
+  const stored = await chrome.storage.local.get("sessionToken");
+  if (stored.sessionToken) return stored.sessionToken;
+
+  const password = passwordInput.value;
+  if (!password) throw new Error("Enter the application password first.");
+
+  const response = await fetch(`${getApiBase()}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password, client: "extension" }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.token) {
+    throw new Error(data.message || "Could not sign in to Brasserie.");
+  }
+
+  await chrome.storage.local.set({ sessionToken: data.token });
+  passwordInput.value = "";
+  passwordInput.style.display = "none";
+  return data.token;
+}
+
+chrome.storage.local.get("sessionToken").then(({ sessionToken }) => {
+  if (sessionToken) passwordInput.style.display = "none";
+});
 
 /** Injected into the page to extract JSON-LD Recipe */
 function getExtractScript() {
@@ -582,9 +610,10 @@ async function sendToRecipeBook() {
   const createUrl = `${base}/api/create-recipe`;
 
   try {
+  const sessionToken = await getSessionToken();
   const parseRes = await fetch(parseUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionToken}` },
     body: JSON.stringify({
       url: lastResult.url,
       recipe: lastResult.recipe,
@@ -593,6 +622,10 @@ async function sendToRecipeBook() {
 
   const parsedData = await parseRes.json().catch(() => ({}));
   if (!parseRes.ok) {
+    if (parseRes.status === 401) {
+      await chrome.storage.local.remove("sessionToken");
+      passwordInput.style.display = "block";
+    }
     showMessage(
       parsedData?.message || parsedData?.error || `Error ${parseRes.status}`,
       "error"
@@ -608,7 +641,7 @@ async function sendToRecipeBook() {
 
   const createRes = await fetch(createUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionToken}` },
     body: JSON.stringify({
       url: lastResult.url,
       recipe,
@@ -617,6 +650,10 @@ async function sendToRecipeBook() {
 
   const createData = await createRes.json().catch(() => ({}));
   if (!createRes.ok) {
+    if (createRes.status === 401) {
+      await chrome.storage.local.remove("sessionToken");
+      passwordInput.style.display = "block";
+    }
     showMessage(
       createData?.message || createData?.error || `Error ${createRes.status}`,
       "error"
@@ -629,9 +666,9 @@ async function sendToRecipeBook() {
     updated ? "Recipe updated in Studio." : "Saved to Studio. Open /studio to edit.",
     "success"
   );
-  } catch {
+  } catch (error) {
     showMessage(
-      "Request failed. Is the app running at " + base + "? Rebuild the extension with NEXT_PUBLIC_APP_URL if needed.",
+      error?.message || "Request failed. Is the app running at " + base + "? Rebuild the extension with NEXT_PUBLIC_APP_URL if needed.",
       "error"
     );
   }
@@ -721,4 +758,3 @@ debugBtn.addEventListener("click", async () => {
     showMessage("Cannot run on this page: " + (e?.message || e), "error");
   }
 });
-
